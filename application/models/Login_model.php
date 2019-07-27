@@ -47,16 +47,6 @@ class Login_model extends CI_Model
         }
     }
 
-    public function cekTanggalLogin($username_admin, $tanggal_login)
-    {
-        $this->db->select('id, username,tanggal_login');
-        $this->db->where('username', $username_admin);
-        $this->db->where('tanggal_login', $tanggal_login);
-        $this->db->order_by('id', 'DESC');
-        $this->db->limit(1);
-        $query = $this->db->get('log_login_presensi');
-        return $query->row();
-    }
 
     function logout()
     {

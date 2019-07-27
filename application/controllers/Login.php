@@ -103,7 +103,7 @@ class Login extends CI_Controller
         if (!isset($isLoggedIn) || $isLoggedIn != true) {
             $this->load->view('Login/loginotp');
         } else {
-            redirect('Absen');
+            redirect('Admin');
         }
     }
 
@@ -133,58 +133,47 @@ class Login extends CI_Controller
             $jam_login = date('H:i:s');
 
             if (!empty($result)) {
-                //mengecek apakah admin belum login pada hari ini atau belum
-                $cek = $this->Login_model->cekTanggalLogin($result->username_admin, $tanggal_login);
+                //data yang akan dimasukkan didalam log database
+                $Log = array(
+                    'username' => $username,
+                    'nama' => $result->nama_admin,
+                    'platform' => $_SERVER['HTTP_USER_AGENT'],
+                    'tanggal_login' => $tanggal_login,
+                    'jam' => $jam_login,
+                );
 
-                //jika admin sudah login pada tanggal yang sama
-                if ($cek > 0) {
-                    $this->session->set_flashdata('error', 'Anda Sudah Melakukan Login');
-                    redirect('Login');
-                } else {
-                    //jika admin belum pernah melakukan login dalam tanggal yang sama
+                //session
+                $data_session =  array(
+                    'username' => $username,
+                    'status' => "login"
+                );
 
-                    //data yang akan dimasukkan didalam log database
-                    $Log = array(
-                        'username' => $username,
-                        'nama' => $result->nama_admin,
-                        'platform' => $_SERVER['HTTP_USER_AGENT'],
-                        'tanggal_login' => $tanggal_login,
-                        'jam' => $jam_login,
-                    );
+                //input ke log database
+                $this->Login_model->LogLoginAdmin($Log);
 
-                    //session
-                    $data_session =  array(
-                        'username' => $username,
-                        'status' => "login"
-                    );
+                //session 
+                $this->session->set_userdata($data_session);
 
-                    //input ke log database
-                    $this->Login_model->LogLoginAdmin($Log);
+                //Kirim notif telegram
+                $perangkat = $_SERVER['HTTP_USER_AGENT'];
+                date_default_timezone_set('Asia/Jakarta');
+                $waktu = date('Y-m-d H:i:s');
+                $website = "https://api.telegram.org/bot" . $botToken;
+                $chatId = -304126311;
+                $params = [
+                    'chat_id' => $chatId,
+                    'text' => 'Admin berhasil Login pada halaman Presensi : ____Username=>' . $username . ' ____nama=>' . $result->nama_admin . ' ____IP=>' . $_SERVER['REMOTE_ADDR'] . ' ____Tanggal & Jam=>' . $waktu . ' ____Perangkat Lunak =>' . $perangkat,
+                ];
+                $ch = curl_init($website . '/sendMessage');
+                curl_setopt($ch, CURLOPT_HEADER, false);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, ($params));
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                $result = curl_exec($ch);
+                curl_close($ch);
 
-                    //session 
-                    $this->session->set_userdata($data_session);
-
-                    //Kirim notif telegram
-                    $perangkat = $_SERVER['HTTP_USER_AGENT'];
-                    date_default_timezone_set('Asia/Jakarta');
-                    $waktu = date('Y-m-d H:i:s');
-                    $website = "https://api.telegram.org/bot" . $botToken;
-                    $chatId = -304126311;
-                    $params = [
-                        'chat_id' => $chatId,
-                        'text' => 'Admin berhasil Login pada halaman Presensi : ____Username=>' . $username . ' ____nama=>' . $result->nama_admin . ' ____IP=>' . $_SERVER['REMOTE_ADDR'] . ' ____Tanggal & Jam=>' . $waktu . ' ____Perangkat Lunak =>' . $perangkat,
-                    ];
-                    $ch = curl_init($website . '/sendMessage');
-                    curl_setopt($ch, CURLOPT_HEADER, false);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                    curl_setopt($ch, CURLOPT_POST, 1);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, ($params));
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                    $result = curl_exec($ch);
-                    curl_close($ch);
-
-                    redirect('Absen');
-                }
+                redirect('Admin');
             } else {
                 //jika username,password dan kodeotp salah
                 $this->session->set_flashdata('error', 'Username,Password atau KodeOTP salah');
