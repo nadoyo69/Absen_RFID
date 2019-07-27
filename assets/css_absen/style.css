@@ -1,0 +1,69 @@
+html,
+body {
+	background-color: darkslategrey;
+	background-size: cover;
+	background-repeat: repeat;
+	font-family: 'Numans', sans-serif;
+}
+
+.my-custom-scrollbar {
+	position: relative;
+	height: 500px;
+	overflow: auto;
+}
+
+.table-wrapper-scroll-y {
+	display: block;
+}
+
+.input-group-prepend span {
+	width: 50px;
+	background-color: #FFC312;
+	color: black;
+	border: 0 !important;
+}
+
+input:focus {
+	outline: 0 0 0 0 !important;
+	box-shadow: 0 0 0 0 !important;
+
+}
+
+.remember {
+	color: white;
+}
+
+.remember input {
+	width: 20px;
+	height: 20px;
+	margin-left: 15px;
+	margin-right: 5px;
+}
+
+.login_btn {
+	color: black;
+	background-color: #FFC312;
+	width: 100px;
+}
+
+.login_btn:hover {
+	color: black;
+	background-color: rgb(146, 112, 9);
+}
+
+.footer {
+	position: fixed;
+	height: 50px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	margin-bottom: 0px;
+}
+
+.box {
+	background-color: aquamarine;
+	align-items: center;
+	position: relative;
+	width: 272px;
+	height: 38px;
+}
