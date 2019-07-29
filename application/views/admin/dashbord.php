@@ -48,7 +48,7 @@
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Data Absensi</h6>
             </div>
             <!-- Card Body -->
             <div class="card-body">
@@ -76,13 +76,7 @@ foreach ($grafik as $data) {
                 label: "Data Prsensi",
                 borderColor: "#3e95cd",
                 fill: false
-            }]
-        },
-        options: {
-            title: {
-                display: true,
-                text: 'World population per region (in millions)'
-            }
+            }],
         }
     });
 </script>

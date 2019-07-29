@@ -34,7 +34,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fa fa-user-circle-o"></i></span>
                                         </div>
-                                        <div class="form-control"><?= $total_absen ?> Pegawai</i>
+                                        <div class="form-control"><?= $total_absen ?> Pegawai Masuk</i>
                                         </div>
                                     </div>
                                 </form>
@@ -99,7 +99,7 @@
     <script type="text/javascript">
         setTimeout(function() {
             location = '<?php echo base_url() ?>'
-        }, 5000)
+        }, 3000)
     </script>
 </body>
 

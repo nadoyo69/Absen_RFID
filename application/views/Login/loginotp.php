@@ -11,7 +11,7 @@
 <body>
     <div class="container">
         <div class="d-flex justify-content-center h-100">
-            <div class="card cards">
+            <div class="card">
                 <div class="card-header text-center">
                     <h3>PT-NADOYO</h3>
                     <h5 class="text-white">Masukkan Kode OTP</h5>
@@ -55,12 +55,6 @@
                                 <span class="input-group-text"><i class="fa fa-key"></i></span>
                             </div>
                             <input name="kodeotp" type="text" class="form-control" placeholder="KODE OTP">
-                        </div>
-                        <div class="input-group form-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-key"></i></span>
-                            </div>
-                            <input name="password" type="password" class="form-control" placeholder="Password">
                         </div>
                         <div class="form-group">
                             <input type="submit" value="Login" class="btn float-right login_btn">

@@ -2,7 +2,7 @@
 class Absen_model extends CI_Model
 {
     //absen datang manual
-    public function prosesabsen($datapegawai)
+    /* public function prosesabsen($datapegawai)
     {
         $this->db->trans_start();
         $this->db->insert('daftar_hadir', $datapegawai);
@@ -29,7 +29,7 @@ class Absen_model extends CI_Model
         $this->db->limit(1);
         $query = $this->db->get('daftar_hadir');
         return $query->row();
-    }
+    } */
 
     //absen datang menggunakan rfid
     public function prosesabsenrfid($datapegawai)

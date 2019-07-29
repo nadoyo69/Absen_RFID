@@ -17,20 +17,13 @@ body {
 }
 
 .card {
-	height: 300px;
+	height: 350px;
 	margin-top: auto;
 	margin-bottom: auto;
 	width: 400px;
 	background-color: rgba(0, 0, 0, 0.5) !important;
 }
 
-.cards {
-	height: 400px;
-	margin-top: auto;
-	margin-bottom: auto;
-	width: 400px;
-	background-color: rgba(0, 0, 0, 0.5) !important;
-}
 
 .social_icon span {
 	font-size: 60px;

@@ -40,7 +40,7 @@ class Login extends CI_Controller
         //form validation
         $this->load->library('form_validation');
         $this->form_validation->set_rules('username', 'Username', 'required|max_length[128]|trim');
-
+        $this->form_validation->set_rules('password', 'Password', 'required|trim');
         //token bot telegram
         $botToken = "972979337:AAGQ5o0QZ1TgL-CzbOYqJrDE6GGU_cJv5ks";
 
@@ -48,14 +48,12 @@ class Login extends CI_Controller
         if ($this->form_validation->run() == false) {
             $this->index();
         } else {
-            //cek apakah username terdaftar dalam database
             $username = strtolower($this->security->xss_clean($this->input->post('username')));
-            $result = $this->Login_model->cekusername($username);
+            $password = strtolower($this->security->xss_clean($this->input->post('password')));
+            $result = $this->Login_model->cekusername($username,$password);
 
-            //proses jika username terdaftar
             if (!empty($result)) {
 
-                //angka OTP
                 $length = 10;
                 $chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
                 $otp = "";
@@ -64,10 +62,8 @@ class Login extends CI_Controller
                     $otp .= $chars[mt_rand(0, strlen($chars) - 1)];
                 }
 
-                //update OTP pada database sesuai username
                 $this->Login_model->updateotp($otp, $username);
 
-                //mengirim OTP ke telegram
                 date_default_timezone_set('Asia/Jakarta');
                 $waktu = date('Y-m-d H:i:s');
                 $website = "https://api.telegram.org/bot" . $botToken;
@@ -88,8 +84,7 @@ class Login extends CI_Controller
                 $this->isLoggedIn();
             } else {
 
-                //jika username tidak ada dalam daftar database
-                $this->session->set_flashdata('error', 'Username not listed');
+                $this->session->set_flashdata('error', 'Username atau Password Salah');
                 $this->load->view('Login/login_admin');
             }
         }
@@ -112,7 +107,6 @@ class Login extends CI_Controller
         //form validation
         $this->load->library('form_validation');
         $this->form_validation->set_rules('username', 'Username', 'required');
-        $this->form_validation->set_rules('password', 'Password', 'required|trim|max_length[32]');
         $this->form_validation->set_rules('kodeotp', 'KodeOTP', 'required|trim|min_length[10]');
 
         //token bot telegram
@@ -121,11 +115,10 @@ class Login extends CI_Controller
             $this->index();
         } else {
             $username = strtolower($this->security->xss_clean($this->input->post('username')));
-            $password = strtolower($this->security->xss_clean($this->input->post('password')));
             $otp = strtolower($this->security->xss_clean($this->input->post('kodeotp')));
 
             //cek apakah username,password dan kode otp benar
-            $result = $this->Login_model->cekAdmin($username, $password, $otp);
+            $result = $this->Login_model->cekAdmin($username, $otp);
 
             //set tanggal dan jam
             date_default_timezone_set('Asia/Jakarta');
@@ -176,7 +169,7 @@ class Login extends CI_Controller
                 redirect('Admin');
             } else {
                 //jika username,password dan kodeotp salah
-                $this->session->set_flashdata('error', 'Username,Password atau KodeOTP salah');
+                $this->session->set_flashdata('error', 'Username atau KodeOTP salah');
                 $this->load->view('Login/loginotp');
             }
         }

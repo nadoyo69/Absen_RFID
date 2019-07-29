@@ -19,7 +19,7 @@ class Absen extends CI_Controller
         $this->load->view('Absen/index', $data, null);
     }
 
-    public function absen()
+    /* public function absen()
     {
 
         $this->load->library('form_validation');
@@ -58,7 +58,7 @@ class Absen extends CI_Controller
                 redirect('Absen');
             }
         }
-    }
+    } */
     public function absenrfid()
     {
         $nomor_rfid = ucwords(strtolower($this->security->xss_clean($this->input->get('uid'))));

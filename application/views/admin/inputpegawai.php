@@ -44,12 +44,6 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Nomor Pegawai</label>
-                        <div class="col-sm-10">
-                            <input type="number" name="nip" class="form-control" placeholder="Nomor Pegawai">
-                        </div>
-                    </div>
-                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Tempat Lahir</label>
                         <div class="col-sm-10">
                             <input type="text" name="tempat_lahir" class="form-control" placeholder="Tempat Lahir">
@@ -61,6 +55,31 @@
                             <input type="date" name="tgl" class="form-control" placeholder="Tanggal Lahir">
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Alamat</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="alamat" class="form-control" placeholder="Alamat">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Jenis Kelamin</label>
+                        <div class="col-sm-10">
+                            <div class="form-check form-check-inline">
+                                <input name="jeniskelamin" class="form-check-input" type="radio" value="Laki-Laki">
+                                <label class="form-check-label">Laki-Laki</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input name="jeniskelamin" class="form-check-input" type="radio" value="Perempuan">
+                                <label class="form-check-label">Perempuan</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Agama</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="agama" class="form-control" placeholder="Agama">
+                        </div>
+                    </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="form-group row">
@@ -70,21 +89,28 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Nomor Pegawai</label>
+                        <div class="col-sm-10">
+                            <input type="number" name="nip" class="form-control" placeholder="Nomor Pegawai">
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Kontak</label>
                         <div class="col-sm-10">
                             <input type="number" name="kontak" class="form-control" placeholder="Kontak">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Alamat</label>
+                        <label class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">
-                            <input type="text" name="alamat" class="form-control" placeholder="Alamat">
+                            <input type="email" name="email" class="form-control" placeholder="Email">
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Submit" class="btn btn-primary float-right">
+            <div class="form-group btn-lg">
+                <button class="btn btn-danger float-right" type="reset"> Reset </button>
+                <button type="submit" value="Submit" class="btn  btn-primary float-right"> Submit</button>
             </div>
         </form>
     </div>

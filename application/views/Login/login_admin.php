@@ -50,6 +50,12 @@
                             </div>
                             <input name="username" type="text" class="form-control" placeholder="username">
                         </div>
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-key"></i></span>
+                            </div>
+                            <input name="password" type="password" class="form-control" placeholder="Password">
+                        </div>
                         <div class="form-group">
                             <input type="submit" value="Login" class="btn float-right login_btn">
                         </div>

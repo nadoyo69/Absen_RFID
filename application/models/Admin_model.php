@@ -23,11 +23,11 @@ class Admin_model extends CI_Model
 
     public function TblPegawai()
     {
-        $this->db->select('tbl_idpegawai, nama_pegawai,tanggal_lahir_pegawai,tempat_lahir_pegawai,nomor_hp_pegawai,nomor_pegawai,foto');
         $this->db->order_by('tbl_idpegawai', 'DESC');
         $query = $this->db->get('pegawai');
         return $query->result_array();
     }
+
     public function uploaddata($data)
     {
         $this->db->trans_start();
@@ -77,5 +77,37 @@ class Admin_model extends CI_Model
             }
             return $hasil;
         }
+    }
+
+    public function daftarhadir()
+    {
+        $this->db->order_by('tbl_idabsen', 'DESC');
+        $query = $this->db->get('daftar_hadir');
+        return $query->result_array();
+    }
+
+    public function logadmin()
+    {
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get('log_login_admin');
+        return $query->result_array();
+    }
+    public function profil($username)
+    {
+        $this->db->where('username_admin', $username);
+        $query = $this->db->get('admin');
+        return $query->row();
+    }
+    function getprofilbyid($tbl_idadmin)
+    {
+        $this->db->from('admin');
+        $this->db->where('tbl_idadmin', $tbl_idadmin);
+        $query = $this->db->get();
+        return $query->row();
+    }
+    public function updateprofil($data,$id){
+        $this->db->where('tbl_idadmin',$id);
+        $this->db->update('admin', $data);
+        return true;
     }
 }

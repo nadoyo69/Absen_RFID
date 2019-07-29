@@ -1,3 +1,6 @@
+<?php
+$foto = $profil->foto;
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,7 +31,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fa fa-smile-o"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+                <div class="sidebar-brand-text mx-3"><?php echo $this->session->userdata("username"); ?></div>
             </a>
             <hr class="sidebar-divider my-0">
             <li class="nav-item active">
@@ -58,7 +61,7 @@
                 Daftar Hadir
             </div>
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#">
+                <a class="nav-link collapsed" href="<?= base_url('daftarhadir') ?>">
                     <i class="fa fa-list-alt"></i>
                     <span>Absensi</span>
                 </a>
@@ -86,21 +89,17 @@
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Valerie Luna</span>
-                                <img class="img-profile rounded-circle" src="<?= base_url('assets/images/fotopegawai/default.png') ?>">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $this->session->userdata("username"); ?></span>
+                                <img class="img-profile rounded-circle" src="<?php echo $foto; ?>">
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="<?= base_url('profiladmin') ?>">
                                     <i class="fa fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fa fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Settings
-                                </a>
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="<?= base_url('logadmin') ?>">
                                     <i class="fa fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Activity Log
+                                    Data Log
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
