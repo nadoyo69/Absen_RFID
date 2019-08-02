@@ -9,7 +9,7 @@ class Login_model extends CI_Model
         return true;
     }
 
-    function cekusername($username,$password)
+    function cekusername($username, $password)
     {
         $this->db->select('username_admin,password');
         $this->db->where('username_admin', $username);
@@ -28,6 +28,16 @@ class Login_model extends CI_Model
         }
     }
 
+    public function cekaction($username, $action)
+    {
+        $this->db->select('username_admin,action');
+        $this->db->where('username_admin', $username);
+        $this->db->where('action', $action);
+        $this->db->from('admin');
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function LogLoginAdmin($Log)
     {
         $this->db->trans_start();
@@ -36,7 +46,6 @@ class Login_model extends CI_Model
         $this->db->trans_complete();
         return $insert_id;
     }
-
     public function cekAdmin($username, $otp)
     {
         $this->db->select('tbl_idadmin,nama_admin,username_admin,password,otp');

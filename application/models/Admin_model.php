@@ -105,8 +105,40 @@ class Admin_model extends CI_Model
         $query = $this->db->get();
         return $query->row();
     }
-    public function updateprofil($data,$id){
-        $this->db->where('tbl_idadmin',$id);
+    public function updateprofil($data, $id)
+    {
+        $this->db->where('tbl_idadmin', $id);
+        $this->db->update('admin', $data);
+        return true;
+    }
+
+    public function cekpassword($oldpassword)
+    {
+        $this->db->where('password', $oldpassword);
+        $this->db->from('admin');
+        $query = $this->db->get();
+        $user = $query->row();
+
+        if (!empty($user)) {
+            if (verifyHashedPassword($oldpassword, $user->password)) {
+                return $user;
+            } else {
+                return array();
+            }
+        } else {
+            return array();
+        }
+    }
+    public function updatepassword($data, $id)
+    {
+        $this->db->where('tbl_idadmin', $id);
+        $this->db->update('admin', $data);
+        return true;
+    }
+
+    public function updatefoto($data, $id)
+    {
+        $this->db->where('tbl_idadmin', $id);
         $this->db->update('admin', $data);
         return true;
     }

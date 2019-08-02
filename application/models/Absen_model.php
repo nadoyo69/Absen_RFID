@@ -62,20 +62,20 @@ class Absen_model extends CI_Model
     }
 
     //pulang
-    public function prosesabsenpulang($nomor_pegawai, $jam)
+    public function prosesabsenpulang($koderfid, $jam)
     {
-        $this->db->where('nomor_pegawai', $nomor_pegawai);
+        $this->db->where('koderfid', $koderfid);
         $this->db->order_by('tbl_idabsen', 'DESC');
         $this->db->limit(1);
         $this->db->update('daftar_hadir', $jam);
         return true;
     }
 
-    public function cekabsendatang($nomor_pegawai, $tanggal)
+    public function cekabsendatang($nomor_rfid, $tanggal_masuk)
     {
-        $this->db->select('nomor_pegawai,nama_pegawai,tanggal_masuk');
-        $this->db->where('nomor_pegawai', $nomor_pegawai);
-        $this->db->where('tanggal_masuk', $tanggal);
+        $this->db->select('koderfid,nama_pegawai,tanggal_masuk');
+        $this->db->where('koderfid', $nomor_rfid);
+        $this->db->where('tanggal_masuk', $tanggal_masuk);
         $this->db->from('daftar_hadir');
         $query = $this->db->get();
         return $query->row();

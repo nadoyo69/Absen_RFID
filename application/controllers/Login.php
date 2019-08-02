@@ -50,10 +50,10 @@ class Login extends CI_Controller
         } else {
             $username = strtolower($this->security->xss_clean($this->input->post('username')));
             $password = strtolower($this->security->xss_clean($this->input->post('password')));
-            $result = $this->Login_model->cekusername($username,$password);
+            $action = '1';
+            $result = $this->Login_model->cekusername($username, $password);
 
             if (!empty($result)) {
-
                 $length = 10;
                 $chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
                 $otp = "";

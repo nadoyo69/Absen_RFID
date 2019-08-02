@@ -52,6 +52,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $route['default_controller'] = 'Absen';
 $route['absen'] = 'Absen/absen';
 $route['absenrfid'] = 'Absen/absenrfid';
+$route['pulang'] = 'Absen/pulang';
+//admin
 $route['admin'] = 'Admin';
 $route['pegawai'] = 'Admin/pegawai';
 $route['inputdatapegawai'] = 'Admin/inputdatapegawai';
@@ -61,10 +63,25 @@ $route['logadmin'] = 'Admin/logadmin';
 $route['profiladmin'] = 'Admin/profiladmin';
 $route['editprofil/(:num)'] = 'Admin/editprofil/$1';
 $route['updateprofil'] = 'Admin/updateprofil';
-$route['logout'] = 'Admin/logout';
-$route['pulang'] = 'Absen/pulang';
+$route['editpassword/(:num)'] = 'Admin/editpassword/$1';
+$route['updatepassword'] = 'Admin/updatepassword';
+$route['editfoto/(:num)'] = 'Admin/editfoto/$1';
+$route['updatefoto'] = 'Admin/updatefoto';
 $route['logout'] = 'Admin/logout';
 $route['login'] = 'Login/loginfix';
 $route['loginotp'] = 'Login/kodeotp';
+//pegawai
+$route['pegawai'] = 'LoginPegawai';
+$route['loginpegawai'] = 'LoginPegawai/loginpegawai';
+$route['logoutpegawai'] = 'Pegawai/logout';
+$route['dashbordpegawai'] = 'Pegawai/index';
+$route['profil'] = 'Pegawai/profil';
+$route['editprofilpegawai/(:num)'] = 'Pegawai/editprofil/$1';
+$route['updateprofilpegawai'] = 'Pegawai/updateprofil';
+$route['editpasswordpegawai/(:num)'] = 'Pegawai/editpassword/$1';
+$route['updatepasswordpegawai'] = 'Pegawai/updatepassword';
+$route['editfotopegawai/(:num)'] = 'Pegawai/editfoto/$1';
+$route['updatefotopegawai'] = 'Pegawai/updatefoto';
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

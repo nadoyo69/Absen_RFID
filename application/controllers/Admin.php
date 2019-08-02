@@ -7,6 +7,7 @@ class Admin extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Admin_model');
+        $this->load->library('form_validation');
         if ($this->session->userdata('status') != "login") {
             redirect(base_url("login"));
         }
@@ -50,7 +51,6 @@ class Admin extends CI_Controller
 
     public function newpegawai()
     {
-        $this->load->library('form_validation');
         $this->form_validation->set_rules('nama', 'Nama', 'required');
         $this->form_validation->set_rules('tempat_lahir', 'Tempat Lahir', 'required');
         $this->form_validation->set_rules('tgl', 'Tanggal Lahir', 'required');
@@ -158,14 +158,14 @@ class Admin extends CI_Controller
     {
         $username = $this->session->userdata("username");
         $data['profil'] = $this->Admin_model->profil($username);
-        $data['title'] = 'Profil';
+        $data['title'] = 'Edit Profil';
         $data['editprofil'] = $this->Admin_model->getprofilbyid($tbl_idadmin);
         $this->load->view('admin/tempelate/header', $data, null);
         $this->load->view('admin/editprofil', $data, null);
         $this->load->view('admin/tempelate/footer');
     }
-    public function updateprofil(){
-        $this->load->library('form_validation');
+    public function updateprofil()
+    {
         $this->form_validation->set_rules('nama', 'Nama', 'required');
         $this->form_validation->set_rules('username', 'Username', 'required');
         $this->form_validation->set_rules('email', 'Email', 'required');
@@ -189,22 +189,114 @@ class Admin extends CI_Controller
             $tgl = ucwords(strtolower($this->security->xss_clean($this->input->post('tgl'))));
             $tmp = ucwords(strtolower($this->security->xss_clean($this->input->post('tmp'))));
 
-            $data= array(
+            $data = array(
                 'nama_admin' => $nama,
                 'username_admin' => $username,
                 'email_admin' => $email,
                 'alamat' => $alamat,
                 'nomor_hp' => $kontak,
                 'tanggal_lahir' => $tgl,
-                'tempat_lahir' => $tmp
+                'tempat_lahir' => $tmp,
+                'updateDtm' => $DTM
             );
-            
-            $result= $this->Admin_model->updateprofil($data,$id);
+
+            $result = $this->Admin_model->updateprofil($data, $id);
             if ($result == true) {
                 $this->session->set_flashdata('success', 'Data berhasil di Update');
             } else {
                 $this->session->set_flashdata('error', 'Data gagal di update');
             }
+            redirect('profiladmin');
+        }
+    }
+
+    public function editpassword()
+    {
+        $username = $this->session->userdata("username");
+        $data['profil'] = $this->Admin_model->profil($username);
+        $data['title'] = 'Edit Password';
+        $this->load->view('admin/tempelate/header', $data, null);
+        $this->load->view('admin/editpassword', $data, null);
+        $this->load->view('admin/tempelate/footer');
+    }
+
+    public function updatepassword()
+    {
+        date_default_timezone_set('Asia/Jakarta');
+        $DTM = date('Y-m-d H:i:s');
+        $this->form_validation->set_rules('oldpassword', 'Password Lama', 'required');
+        $this->form_validation->set_rules('password1', 'Password Baru', 'required');
+        $this->form_validation->set_rules('password2', 'Konfimasi Password', 'required|matches[password1]');
+
+        if ($this->form_validation->run() == false) {
+            $this->editpassword();
+        } else {
+            $id = $this->input->post('id');
+            $oldpassword = $this->input->post('oldpassword');
+            $newpassword = $this->input->post('password1');
+
+            $resultpas = $this->Admin_model->cekpassword($oldpassword);
+            if (!empty($resultpas)) {
+                $this->session->set_flashdata('nomatch', 'Password lama Salah');
+                redirect('Admin/editpassword');
+            } else {
+
+                $data = array(
+                    'password' => getHashedPassword($newpassword),
+                    'updateDtm' => $DTM
+                );
+
+                $result = $this->Admin_model->updatepassword($data, $id);
+
+                if ($result > 0) {
+                    $this->session->set_flashdata('success', 'Password Berhasil diUpdate');
+                } else {
+                    $this->session->set_flashdata('error', 'Password gagal diupdate');
+                }
+            }
+            redirect('profiladmin');
+        }
+    }
+
+    public function editfoto()
+    {
+        $username = $this->session->userdata("username");
+        $data['profil'] = $this->Admin_model->profil($username);
+        $data['title'] = 'Edit Foto';
+        $this->load->view('admin/tempelate/header', $data, null);
+        $this->load->view('admin/editfoto', $data, null);
+        $this->load->view('admin/tempelate/footer');
+    }
+
+    public function updatefoto()
+    {
+        $this->form_validation->set_rules('foto', 'Foto', 'required');
+        $config['upload_path'] = './assets/images/fotoadmin/';
+        $config['allowed_types'] = 'jpg|jpeg|png';
+        $config['max_size'] = '2048';
+        $this->load->library('upload', $config);
+
+        if ($this->form_validation->run() == false) {
+            $this->editfoto();
+        } else {
+            $id = $this->input->post('id');
+            $this->upload->do_upload('foto');
+            $upload_data = $this->upload->data();
+            $file_name =   base_url() . 'assets/images/fotoadmin/' . $upload_data['file_name'];
+            $foto = $file_name;
+
+            $data = array(
+                'foto' => $foto
+            );
+
+            $result = $this->Admin_model->updatefoto($data, $id);
+
+            if ($result == true) {
+                $this->session->set_flashdata('success', 'Update Foto Berhasil');
+            } else {
+                $this->session->set_flashdata('error', 'Update Foto Gagal');
+            }
+
             redirect('profiladmin');
         }
     }

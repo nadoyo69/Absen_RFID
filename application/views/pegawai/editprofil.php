@@ -1,18 +1,19 @@
 <?php
-$tbl_idadmin = $editprofil->tbl_idadmin;
-$nama = $editprofil->nama_admin;
-$username = $editprofil->username_admin;
-$email = $editprofil->email_admin;
+$tbl_idpegawai = $editprofil->tbl_idpegawai;
+$nama = $editprofil->nama_pegawai;
+$nip = $editprofil->nomor_pegawai;
+$tgl = $editprofil->tanggal_lahir_pegawai;
+$tmp = $editprofil->tempat_lahir_pegawai;
+$kontak = $editprofil->nomor_hp_pegawai;
+$jenis = $editprofil->jeniskelamin;
 $alamat = $editprofil->alamat;
-$kontak = $editprofil->nomor_hp;
-$tgl = $editprofil->tanggal_lahir;
-$tmp = $editprofil->tempat_lahir;
-$foto = $editprofil->foto;
+$agama = $editprofil->agama;
+$email =  $editprofil->email;
 ?>
 <div class="container bootstrap snippet">
     <div class="tab-content">
         <div class="tab-pane active" id="home">
-            <form class="form" action="<?= base_url('updateprofil') ?>" enctype="multipart/form-data" method="post">
+            <form class="form" action="<?= base_url('updateprofilpegawai') ?>" enctype="multipart/form-data" method="post">
                 <?php $this->load->helper('form'); ?>
                 <div class="row">
                     <div class="col-md-12">
@@ -43,32 +44,8 @@ $foto = $editprofil->foto;
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Nama</label>
                     <div class="col-sm-10">
-                        <input type="text" hidden name="id" class="form-control" value="<?= $tbl_idadmin ?>">
+                        <input type="text" hidden name="id" class="form-control" value="<?= $tbl_idpegawai ?>">
                         <input type="text" name="nama" class="form-control" value="<?= $nama ?>">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Username</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="username" class="form-control" value="<?= $username ?>">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Email</label>
-                    <div class="col-sm-10">
-                        <input type="email" name="email" class="form-control" value="<?= $email ?>">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Kontak</label>
-                    <div class="col-sm-10">
-                        <input type="number" name="kontak" class="form-control" value="<?= $kontak ?>">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Alamat</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="alamat" class="form-control" value="<?= $alamat ?>">
                     </div>
                 </div>
                 <div class="form-group row">
@@ -81,6 +58,36 @@ $foto = $editprofil->foto;
                     <label class="col-sm-2 col-form-label">Tempat Lahir</label>
                     <div class="col-sm-10">
                         <input type="text" name="tmp" class="form-control" value="<?= $tmp ?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Agama</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="agama" class="form-control" value="<?= $agama ?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Jenis Kelamin</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="jenis" class="form-control" value="<?= $jenis ?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Kontak</label>
+                    <div class="col-sm-10">
+                        <input type="number" name="kontak" class="form-control" value="<?= $kontak ?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Email</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="email" class="form-control" value="<?= $email ?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Alamat</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="alamat" class="form-control" value="<?= $alamat ?>">
                     </div>
                 </div>
                 <div class="form-group btn-lg">

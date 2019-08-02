@@ -381,12 +381,16 @@ $config['encryption_key'] = '27e8b860757d6fb2cf223df1a16b2f17';
 */
 $config['sess_driver'] = 'files';
 $config['sess_cookie_name'] = 'ci_session';
-$config['sess_expiration'] = 7200;
-$config['sess_save_path'] = NULL;
-$config['sess_match_ip'] = FALSE;
+$config['sess_expiration'] = 3600;
+$config['sess_expire_on_close'] = true;
+$config['sess_encrypt_cookie']  = false;
+$config['sess_use_database']    = false;
+$config['sess_table_name'] = 'ci_sessions';
+$config['sess_match_ip'] = false;
+$config['sess_match_useragent'] = true;
+$config['sess_save_path'] = null;
 $config['sess_time_to_update'] = 300;
-$config['sess_regenerate_destroy'] = FALSE;
-
+$config['sess_regenerate_destroy'] = false;
 /*
 |--------------------------------------------------------------------------
 | Cookie Related Variables
