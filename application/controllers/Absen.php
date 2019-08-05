@@ -22,15 +22,14 @@ class Absen extends CI_Controller
     {
         $nomor_rfid = ucwords(strtolower($this->security->xss_clean($this->input->get('uid'))));
 
-
         date_default_timezone_set('Asia/Jakarta');
         $tanggal_masuk = date('Y-m-d');
         $jam = date('H:i:s');
 
         $pagi = strtotime('07:00:00');
-        $endpagi = strtotime('09:00:00');
-        $sore = strtotime('15:00:00');
-        $endore = strtotime('18:00:00');
+        $endpagi = strtotime('20:00:00');
+        $sore = strtotime('22:00:00');
+        $endore = strtotime('24:00:00');
 
         if (time() >= $pagi && time() <= $endpagi) {
             $result = $this->Absen_model->cekpegawairfid($nomor_rfid);
