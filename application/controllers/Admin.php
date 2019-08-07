@@ -20,7 +20,8 @@ class Admin extends CI_Controller
         $data['title'] = 'Dashbord';
         date_default_timezone_set('Asia/Jakarta');
         $tanggal = date('Y-m-d');
-        $data['grafik'] = $this->Admin_model->grafik();
+        $bulan = date('m');
+        $data['grafik'] = $this->Admin_model->grafik($bulan);
         $data['absen_hari_ini'] = $this->Admin_model->absen_hari_ini($tanggal);
         $data['total_pegawai'] = $this->Admin_model->total_pegawai();
         $this->load->view('admin/tempelate/header', $data, NULL);
@@ -28,11 +29,12 @@ class Admin extends CI_Controller
         $this->load->view('admin/tempelate/footer');
     }
 
-    public function pegawai()
+    public function datapegawai($tbl_idpegawai = null)
     {
         $username = $this->session->userdata("username");
         $data['profil'] = $this->Admin_model->profil($username);
         $data['title'] = 'Data Pegawai';
+        $data['detail'] = $this->Admin_model->getprofilpegawai($tbl_idpegawai);
         $data['pegawai'] = $this->Admin_model->TblPegawai();
         $this->load->view('admin/tempelate/header', $data, null);
         $this->load->view('admin/pegawai', $data, null);
@@ -300,6 +302,137 @@ class Admin extends CI_Controller
             redirect('profiladmin');
         }
     }
+
+    public function editpegawai($tbl_idpegawai)
+    {
+        $username = $this->session->userdata("username");
+        $data['profil'] = $this->Admin_model->profil($username);
+        $data['title'] = 'Edit Pegawai';
+        $data['editpegawai'] = $this->Admin_model->getprofilpegawai($tbl_idpegawai);
+        $this->load->view('admin/tempelate/header', $data, null);
+        $this->load->view('admin/editpegawai', $data, null);
+        $this->load->view('admin/tempelate/footer');
+    }
+
+    public function updatepegawai()
+    {
+        date_default_timezone_set('Asia/Jakarta');
+        $DTM = date('Y-m-d H:i:s');
+        $this->form_validation->set_rules('nama', 'Nama', 'required');
+        $this->form_validation->set_rules('nip', 'Nomor Pegawai', 'required');
+        $this->form_validation->set_rules('rfid', 'Nomor RFID', 'required');
+
+        if ($this->form_validation->run() == false) {
+            $this->editprofil();
+        } else {
+            $id = ucwords(strtolower($this->security->xss_clean($this->input->post('id'))));
+            $nama = ucwords(strtolower($this->security->xss_clean($this->input->post('nama'))));
+            $nip = ucwords(strtolower($this->security->xss_clean($this->input->post('nip'))));
+            $rfid = ucwords(strtolower($this->security->xss_clean($this->input->post('rfid'))));
+
+            $data = array(
+                'nama_pegawai' => $nama,
+                'nomor_pegawai' => $nip,
+                'koderfid' => $rfid,
+                'updateDtm' => $DTM
+            );
+
+            $result = $this->Admin_model->updatepegawai($data, $id);
+            if ($result == true) {
+                $this->session->set_flashdata('success', 'Data atas nama ' . $nama . ' berhasil di Update');
+            } else {
+                $this->session->set_flashdata('error', 'Data atas nama ' . $nama . ' gagal di update');
+            }
+            redirect('datapegawai');
+        }
+    }
+
+    public function resetpasswordpegawai($tbl_idpegawai)
+    {
+        date_default_timezone_set('Asia/Jakarta');
+        $DTM = date('Y-m-d H:i:s');
+        $cek = $this->Admin_model->getprofilpegawai($tbl_idpegawai);
+        if (!empty($cek)) {
+            $data = array(
+                'password' => getHashedPassword('12345'),
+                'updateDtm' => $DTM
+            );
+            $result = $this->Admin_model->resetpasswordpegawai($data, $tbl_idpegawai);
+            if ($result == true) {
+                $this->session->set_flashdata('success', 'Password dengan Nama ' . $cek->nama_pegawai . ' berhasil di Reset');
+            }
+            redirect('datapegawai');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal Reset Password');
+            redirect('datapegawai');
+        }
+    }
+
+    public function hapuspegawai($tbl_idpegawai)
+    {
+        date_default_timezone_set('Asia/Jakarta');
+        $DTM = date('Y-m-d H:i:s');
+        $result = $this->Admin_model->getprofilpegawai($tbl_idpegawai);
+        if (!empty($result)) {
+            $data = array(
+                'nama_pegawai' => $result->nama_pegawai,
+                'tanggal_lahir' => $result->tanggal_lahir_pegawai,
+                'tempat_lahir' => $result->tempat_lahir_pegawai,
+                'nomor_hp' => $result->nomor_hp_pegawai,
+                'nomor_pegawai' => $result->nomor_pegawai,
+                'koderfid' => $result->koderfid,
+                'foto' => $result->foto,
+                'alamat' => $result->alamat,
+                'jeniskelamin' => $result->jeniskelamin,
+                'email' => $result->email,
+                'agama' => $result->agama,
+                'tanggal_keluar' => $DTM
+
+            );
+            $this->Admin_model->insertdeletepegawai($data);
+            $this->Admin_model->deletepagwai($tbl_idpegawai);
+            $this->session->set_flashdata('success', 'Pegawai Atas Nama ' . $result->nama_pegawai . ' Telah Dihapus');
+            redirect('datapegawai');
+        } else {
+            $this->session->set_flashdata('error', 'Pegawai Atas Nama ' . $result->nama_pegawai . ' Gagal Dihapus');
+            redirect('datapegawai');
+        }
+    }
+
+    public function viewpegawai($tbl_idpegawai)
+    {
+        $username = $this->session->userdata("username");
+        $data['profil'] = $this->Admin_model->profil($username);
+        $pegawai = $this->Admin_model->getprofilpegawai($tbl_idpegawai);
+        $data['title'] = 'Data ' . $pegawai->nama_pegawai;
+        $data['viewpegawai'] = $this->Admin_model->getprofilpegawai($tbl_idpegawai);
+        $this->load->view('admin/viewpegawai', $data, null);
+    }
+
+    public function exportexcel()
+    {
+        $data['pegawai'] = $this->Admin_model->TblPegawai();
+        $this->load->view('admin/exportexcel', $data, null);
+    }
+
+    public function exportabsenbulan()
+    {
+        date_default_timezone_set('Asia/Jakarta');
+        $bulan = date('m');
+        $data['title'] = 'Data Absensi Bulan ' . date('M') . ' PT-NADOYO';
+        $data['data'] = $this->Admin_model->exportabsenbulan($bulan);
+        $this->load->view('admin/exportabsenexcel', $data, null);
+    }
+
+    public function exportabsentahun()
+    {
+        date_default_timezone_set('Asia/Jakarta');
+        $tahun = date('Y');
+        $data['title'] = 'Data Absensi Tahun ' . $tahun . ' PT-NADOYO';
+        $data['data'] = $this->Admin_model->exportabsentahun($tahun);
+        $this->load->view('admin/exportabsenexcel', $data, null);
+    }
+
 
     function logout()
     {

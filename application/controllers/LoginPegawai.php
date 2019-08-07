@@ -60,4 +60,60 @@ class LoginPegawai extends CI_Controller
             }
         }
     }
+    public function forgetpassword()
+    {
+        $this->load->view('LoginPegawai/forgetpassword');
+    }
+    public function forgetpasswordpegawai()
+    {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('email', 'Email', 'required');
+        $this->form_validation->set_rules('nama', 'Nama', 'required');
+
+        if ($this->form_validation->run() == false) {
+            $this->load->view('LoginPegawai/forgetpassword');
+        } else {
+            $email = strtolower($this->security->xss_clean($this->input->post('email')));
+            $nama = $this->input->post('nama');
+            $result = $this->LoginPegawai_model->cekresetpegawai($email);
+            date_default_timezone_set('Asia/Jakarta');
+            $tanggal = date('Y-m-d');
+            $jam = date('H:i:s');
+
+            if (!empty($result)) {
+                $data = array(
+                    'email' => $email,
+                    'nama' => $nama,
+                    'tanggal' => $tanggal,
+                    'jam' => $jam
+                );
+                $this->LoginPegawai_model->resetpassword($data);
+
+                $botToken = "972979337:AAGQ5o0QZ1TgL-CzbOYqJrDE6GGU_cJv5ks";
+                $perangkat = $_SERVER['HTTP_USER_AGENT'];
+                date_default_timezone_set('Asia/Jakarta');
+                $waktu = date('Y-m-d H:i:s');
+                $website = "https://api.telegram.org/bot" . $botToken;
+                $chatId = -304126311;
+                $params = [
+                    'chat_id' => $chatId,
+                    'text' => 'Pegawai Atas Nama ' . $nama . ' dengan email ' . $email . ' Ingin Mereset Passwordnya. Perangkat Yang digunakan adalah ' . $perangkat
+                ];
+                $ch = curl_init($website . '/sendMessage');
+                curl_setopt($ch, CURLOPT_HEADER, false);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, ($params));
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                $result = curl_exec($ch);
+                curl_close($ch);
+
+                $this->session->set_flashdata('success', 'Reset Password Anda Sedang Diproses Admin, Silahkan Tunggu informasi Selanjutnya');
+                redirect('Pegawai');
+            } else {
+                $this->session->set_flashdata('error', 'Anda Bukan Pegawai Disini');
+                $this->load->view('LoginPegawai/login');
+            }
+        }
+    }
 }

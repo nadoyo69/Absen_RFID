@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="<?= base_url() ?>assets/css_absen/style.css">
 </head>
 
-<body oncontextmenu="return false;">
+<body oncontextmenu="return !true;">
     <div class="container mt-3">
         <div class="row">
             <div class="col-lg-4">
@@ -21,7 +21,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                                         </div>
-                                        <input readonly class="form-control" value="<?php echo date("d-m-Y") ?>">
+                                        <div class="form-control"><?php echo date("d-m-Y") ?></div>
                                     </div>
                                     <div class="input-group form-group">
                                         <div class="input-group-prepend">
@@ -35,6 +35,13 @@
                                             <span class="input-group-text"><i class="fa fa-user-circle-o"></i></span>
                                         </div>
                                         <div class="form-control"><?= $total_absen ?> Pegawai Masuk</i>
+                                        </div>
+                                    </div>
+                                    <div class="input-group form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-user-circle-o"></i></span>
+                                        </div>
+                                        <div class="form-control"><?= $total_pegawai - $total_absen ?> Pegawai TM</i>
                                         </div>
                                     </div>
                                 </form>

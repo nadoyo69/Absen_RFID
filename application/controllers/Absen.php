@@ -14,6 +14,7 @@ class Absen extends CI_Controller
     {
         date_default_timezone_set('Asia/Jakarta');
         $tanggal_masuk = date('Y-m-d');
+        $data['total_pegawai'] = $this->Absen_model->total_pegawai();
         $data['table_absen'] =  $this->Absen_model->table_absen($tanggal_masuk);
         $data['total_absen'] = $this->Absen_model->total_absen($tanggal_masuk);
         $this->load->view('Absen/index', $data, null);
@@ -25,13 +26,15 @@ class Absen extends CI_Controller
         date_default_timezone_set('Asia/Jakarta');
         $tanggal_masuk = date('Y-m-d');
         $jam = date('H:i:s');
+        $bulan = date('m');
+        $tahun = date('Y');
 
         $pagi = strtotime('07:00:00');
-        $endpagi = strtotime('20:00:00');
-        $sore = strtotime('22:00:00');
-        $endore = strtotime('24:00:00');
+        $pagix = strtotime('09:00:00');
+        $sore = strtotime('16:00:00');
+        $sorex = strtotime('18:00:00');
 
-        if (time() >= $pagi && time() <= $endpagi) {
+        if (time() >= $pagi && time() <= $pagix) {
             $result = $this->Absen_model->cekpegawairfid($nomor_rfid);
             if (!empty($result)) {
                 $cek = $this->Absen_model->cektanggalrfid($nomor_rfid, $tanggal_masuk);
@@ -44,7 +47,9 @@ class Absen extends CI_Controller
                         'koderfid' => $nomor_rfid,
                         'nama_pegawai' => $result->nama_pegawai,
                         'tanggal_masuk' => $tanggal_masuk,
-                        'jam_masuk' => $jam
+                        'jam_masuk' => $jam,
+                        'bulan' => $bulan,
+                        'tahun' => $tahun
                     );
                     $this->Absen_model->prosesabsenrfid($datapegawai);
                     $this->session->set_flashdata('success', 'Presesnsi Berhasil');
@@ -54,7 +59,7 @@ class Absen extends CI_Controller
                 $this->session->set_flashdata('error', 'Pegawai tidak TERDAFTAR');
                 redirect('Absen');
             }
-        } else if (time() >= $sore && time() <= $endore) {
+        } else if (time() >= $sore && time() <= $sorex) {
             $result = $this->Absen_model->cekabsendatang($nomor_rfid, $tanggal_masuk);
             if (!empty($result)) {
                 $datapulang = array(

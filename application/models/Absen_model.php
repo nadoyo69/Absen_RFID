@@ -100,4 +100,13 @@ class Absen_model extends CI_Model
             return 0;
         }
     }
+    public function total_pegawai()
+    {
+        $query = $this->db->get('pegawai');
+        if ($query->num_rows() > 0) {
+            return $query->num_rows();
+        } else {
+            return 0;
+        }
+    }
 }

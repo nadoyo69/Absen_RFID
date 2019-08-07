@@ -14,7 +14,7 @@
             <div class="card">
                 <div class="card-header text-center">
                     <h3>PT-NADOYO</h3>
-                    <h5 class="text-white">Form Login Pegawai</h5>
+                    <h5 class="text-white">Reset Password</h5>
                 </div>
                 <div class="card-body">
                     <?php $this->load->helper('form'); ?>
@@ -23,27 +23,7 @@
                             <?php echo validation_errors('<div class="alert alert-danger alert-dismissable">', ' <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button></div>'); ?>
                         </div>
                     </div>
-                    <?php
-                    $this->load->helper('form');
-                    $error = $this->session->flashdata('error');
-                    if ($error) {
-                        ?>
-                        <div class="alert alert-danger alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <?php echo $error; ?>
-                        </div>
-                    <?php
-                    }
-                    $success = $this->session->flashdata('success');
-                    if ($success) {
-                        ?>
-                        <div class="alert alert-success alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <?php echo $success; ?>
-                        </div>
-                    <?php
-                    } ?>
-                    <form action="<?= base_url(); ?>loginpegawai" method="post" enctype="multipart/form-data">
+                    <form action="<?= base_url(); ?>forgetpasswordpegawai" method="post" enctype="multipart/form-data">
                         <div class="input-group form-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-user"></i></span>
@@ -54,13 +34,12 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fa fa-key"></i></span>
                             </div>
-                            <input name="password" type="password" class="form-control" placeholder="Password">
+                            <input name="nama" type="text" class="form-control" placeholder="Nama">
                         </div>
                         <div class="form-group">
-                            <input type="submit" value="Login" class="btn float-right login_btn">
+                            <input type="submit" value="Reset" class="btn float-right login_btn">
                         </div>
                     </form>
-                    <a class="small" href="<?= base_url('forgetpassword') ?>">Lupa Password?</a>
                 </div>
             </div>
         </div>

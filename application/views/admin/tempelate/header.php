@@ -34,27 +34,26 @@ $foto = $profil->foto;
                 <div class="sidebar-brand-text mx-3"><?php echo $this->session->userdata("username"); ?></div>
             </a>
             <hr class="sidebar-divider my-0">
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="<?= base_url('admin'); ?>">
                     <i class="fa fa-tachometer"></i>
                     <span>Dashboard</span></a>
             </li>
             <hr class="sidebar-divider">
             <div class="sidebar-heading">
-                Data Pegawai
+                Pegawai
             </div>
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fa fa-users"></i>
-                    <span>Pegawai</span>
+                <a class="nav-link collapsed" href="<?= base_url('datapegawai') ?>">
+                    <i class="fa fa-list-alt"></i>
+                    <span>Data Pegawai</span>
                 </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">View:</h6>
-                        <a class="collapse-item" href="<?= base_url('pegawai') ?>">Data Pegawai</a>
-                        <a class="collapse-item" href="<?= base_url('inputdatapegawai') ?>">Input Data</a>
-                    </div>
-                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="<?= base_url('inputdatapegawai') ?>">
+                    <i class="fa fa-keyboard-o"></i>
+                    <span>Input Data</span>
+                </a>
             </li>
             <hr class="sidebar-divider">
             <div class="sidebar-heading">
@@ -64,6 +63,13 @@ $foto = $profil->foto;
                 <a class="nav-link collapsed" href="<?= base_url('daftarhadir') ?>">
                     <i class="fa fa-list-alt"></i>
                     <span>Absensi</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="">
+                    <i class="fa fa-clock-o"></i>
+                    <span>Laporan</span>
                 </a>
             </li>
         </ul>

@@ -65,10 +65,11 @@ class Admin_model extends CI_Model
         return $query->row();
     }
 
-    public function grafik()
+    public function grafik($bulan)
     {
-        $this->db->select('tanggal_masuk,COUNT(tanggal_masuk) as total');
+        $this->db->select('tanggal_masuk,bulan,COUNT(tanggal_masuk) as total');
         $this->db->group_by('tanggal_masuk');
+        $this->db->where('bulan', $bulan);
         $this->db->order_by('tanggal_masuk', 'asc');
         $query = $this->db->get('daftar_hadir');
         if ($query->num_rows() > 0) {
@@ -141,5 +142,57 @@ class Admin_model extends CI_Model
         $this->db->where('tbl_idadmin', $id);
         $this->db->update('admin', $data);
         return true;
+    }
+
+    function getprofilpegawai($tbl_idpegawai)
+    {
+        $this->db->from('pegawai');
+        $this->db->where('tbl_idpegawai', $tbl_idpegawai);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function updatepegawai($data, $id)
+    {
+        $this->db->where('tbl_idpegawai', $id);
+        $this->db->update('pegawai', $data);
+        return true;
+    }
+
+    public function resetpasswordpegawai($data, $tbl_idpegawai)
+    {
+        $this->db->where('tbl_idpegawai', $tbl_idpegawai);
+        $this->db->update('pegawai', $data);
+        return true;
+    }
+
+    public function deletepagwai($tbl_idpegawai)
+    {
+        $this->db->where('tbl_idpegawai', $tbl_idpegawai);
+        $this->db->delete('pegawai');
+    }
+
+    public function insertdeletepegawai($data)
+    {
+        $this->db->trans_start();
+        $this->db->insert('pegawai_keluar', $data);
+        $insert_id = $this->db->insert_id();
+        $this->db->trans_complete();
+        return $insert_id;
+    }
+
+    public function exportabsenbulan($bulan)
+    {
+        $this->db->where('bulan', $bulan);
+        $this->db->order_by('tbl_idabsen', 'DESC');
+        $query = $this->db->get('daftar_hadir');
+        return $query->result_array();
+    }
+    public function exportabsentahun($tahun)
+    {
+        $this->db->where('tahun', $tahun);
+        $this->db->order_by('tbl_idabsen', 'DESC');
+        $query = $this->db->get('daftar_hadir');
+        return $query->result_array();
     }
 }

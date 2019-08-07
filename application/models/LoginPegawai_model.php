@@ -26,4 +26,20 @@ class LoginPegawai_model extends CI_Model
         $this->db->trans_complete();
         return $insert_id;
     }
+
+    public function cekresetpegawai($email)
+    {
+        $this->db->where('email', $email);
+        $query = $this->db->get('pegawai');
+        return $query->row();
+    }
+
+    public function resetpassword($data)
+    {
+        $this->db->trans_start();
+        $this->db->insert('resetpassword', $data);
+        $insert_id = $this->db->insert_id();
+        $this->db->trans_complete();
+        return $insert_id;
+    }
 }
