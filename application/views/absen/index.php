@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="no-js" lang="en">
 
 <head>
     <title>Absensi Datang</title>
@@ -57,7 +57,7 @@
                             <div class="card-body">
                                 <h1 class="card-title text-center">Presensi PT-NADOYO</h1>
                                 <div class="table-wrapper-scroll-y my-custom-scrollbar">
-                                    <table class="table table-bordered table-striped mb-0 text-center">
+                                    <table id="mytable" class="table table-bordered table-striped mb-0 text-center">
                                         <thead class="bg-warning">
                                             <tr>
                                                 <th scope="col">ID Pegawai</th>
@@ -67,17 +67,7 @@
                                                 <th scope="col">Jam Pulang</th>
                                             </tr>
                                         </thead>
-                                        <tbody class="tbody-light">
-                                            <?php $no = 1;
-                                            foreach ($table_absen as $absen) : ?>
-                                                <tr>
-                                                    <th scope="row"><?= $no++ ?></th>
-                                                    <td><?= $absen['nama_pegawai']; ?></td>
-                                                    <td><?= $absen['tanggal_masuk']; ?> </td>
-                                                    <td><?= $absen['jam_masuk']; ?></td>
-                                                    <td><?= $absen['jam_keluar']; ?></td>
-                                                </tr>
-                                            <?php endforeach; ?>
+                                        <tbody class="show_product">
                                         </tbody>
                                     </table>
                                 </div>
@@ -87,11 +77,12 @@
                 </div>
             </div>
         </div>
-
     </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://js.pusher.com/5.0/pusher.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
     <script>
         window.setTimeout("waktu()", 1000);
 
@@ -103,10 +94,46 @@
             document.getElementById("detik").innerHTML = waktu.getSeconds();
         }
     </script>
-    <script type="text/javascript">
-        setTimeout(function() {
-            location = '<?php echo base_url() ?>'
-        }, 3000)
+
+    <script>
+        $(document).ready(function() {
+            show_product();
+            Pusher.logToConsole = true;
+            var pusher = new Pusher('daa8c8cd19c2dc18dbb2', {
+                cluster: 'ap1',
+                forceTLS: true
+            });
+            var channel = pusher.subscribe('my-channel');
+            channel.bind('my-event', function(data) {
+                if (data.message === 'success') {
+                    show_product();
+                }
+            });
+
+            function show_product() {
+                $.ajax({
+                    url: '<?php echo site_url("Absen/get_product"); ?>',
+                    type: 'GET',
+                    async: true,
+                    dataType: 'json',
+                    success: function(data) {
+                        var html = '';
+                        var count = 1;
+                        var i;
+                        for (i = 0; i < data.length; i++) {
+                            html += '<tr>' +
+                                '<td>' + count++ + '</td>' +
+                                '<td>' + data[i].nama_pegawai + '</td>' +
+                                '<td>' + data[i].tanggal_masuk + '</td>' +
+                                '<td>' + data[i].jam_masuk + '</td>' +
+                                '<td>' + data[i].jam_keluar + '</td>' +
+                                '</tr>';
+                        }
+                        $('.show_product').html(html);
+                    }
+                });
+            }
+        });
     </script>
 </body>
 

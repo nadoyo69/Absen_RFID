@@ -20,19 +20,19 @@
     $error = $this->session->flashdata('error');
     if ($error) {
         ?>
-        <div class="alert alert-danger alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <?php echo $error; ?>
-        </div>
+    <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <?php echo $error; ?>
+    </div>
     <?php
     }
     $success = $this->session->flashdata('success');
     if ($success) {
         ?>
-        <div class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <?php echo $success; ?>
-        </div>
+    <div class="alert alert-success alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <?php echo $success; ?>
+    </div>
     <?php
     } ?>
     <div class="card-body">
@@ -60,19 +60,19 @@
                 </tfoot>
                 <tbody>
                     <?php foreach ($pegawai as $data) : ?>
-                        <tr>
-                            <td><?= $data['nama_pegawai'] ?></td>
-                            <td><?= $data['nomor_pegawai'] ?></td>
-                            <td><?= $data['nomor_hp_pegawai'] ?></td>
-                            <td><?= $data['email'] ?></td>
-                            <td><?= $data['alamat'] ?></td>
-                            <td class="text-center">
-                                <a target="_blank" href="<?= base_url('viewpegawai/' . $data['tbl_idpegawai']); ?>" class="fa fa-print"></a> |
-                                <a href="<?= base_url('editpegawai/' . $data['tbl_idpegawai']); ?>" class="fa fa-pencil-square-o"></a> |
-                                <a href="<?= base_url('resetpasswordpegawai/' . $data['tbl_idpegawai']) ?>" onClick="return confirm('Apakah Anda benar-benar mau Reset Password?')" class="fa fa-key"></a> |
-                                <a href="<?= base_url('hapuspegawai/' . $data['tbl_idpegawai']) ?>" onClick="return confirm('Apakah Anda benar-benar mau Menghapus Pegawai?')" class="fa fa-trash"></a>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td><?= $data['nama_pegawai'] ?></td>
+                        <td><?= $data['nomor_pegawai'] ?></td>
+                        <td><?= $data['nomor_hp_pegawai'] ?></td>
+                        <td><?= $data['email'] ?></td>
+                        <td><?= $data['alamat'] ?></td>
+                        <td class="text-center">
+                            <a target="_blank" href="<?= base_url('viewpegawai/' . $data['tbl_idpegawai']); ?>" class="fa fa-print"></a> |
+                            <a href="<?= base_url('editpegawai/' . $data['tbl_idpegawai']); ?>" class="fa fa-pencil-square-o"></a> |
+                            <a href="<?= base_url('resetpasswordpegawai/' . $data['tbl_idpegawai']) ?>" onClick="return confirm('Apakah Anda benar-benar mau Reset Password?')" class="fa fa-key"></a> |
+                            <a href="<?= base_url('hapuspegawai/' . $data['tbl_idpegawai']) ?>" onClick="return confirm('Apakah Anda benar-benar mau Menghapus Pegawai?')" class="fa fa-trash"></a>
+                        </td>
+                    </tr>
                     <?php endforeach ?>
                 </tbody>
             </table>

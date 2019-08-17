@@ -147,7 +147,7 @@ class Admin extends CI_Controller
         $this->load->view('admin/logadmin', $data, null);
         $this->load->view('admin/tempelate/footer');
     }
-    public function profiladmin()
+    public function profiladmin($username = null)
     {
         $username = $this->session->userdata("username");
         $data['profil'] = $this->Admin_model->profil($username);
@@ -156,16 +156,7 @@ class Admin extends CI_Controller
         $this->load->view('admin/profiladmin', $data, null);
         $this->load->view('admin/tempelate/footer');
     }
-    public function editprofil($tbl_idadmin = null)
-    {
-        $username = $this->session->userdata("username");
-        $data['profil'] = $this->Admin_model->profil($username);
-        $data['title'] = 'Edit Profil';
-        $data['editprofil'] = $this->Admin_model->getprofilbyid($tbl_idadmin);
-        $this->load->view('admin/tempelate/header', $data, null);
-        $this->load->view('admin/editprofil', $data, null);
-        $this->load->view('admin/tempelate/footer');
-    }
+
     public function updateprofil()
     {
         $this->form_validation->set_rules('nama', 'Nama', 'required');
@@ -204,22 +195,15 @@ class Admin extends CI_Controller
 
             $result = $this->Admin_model->updateprofil($data, $id);
             if ($result == true) {
+                $this->session->set_userdata('username', $username);
                 $this->session->set_flashdata('success', 'Data berhasil di Update');
+                redirect('profiladmin');
             } else {
                 $this->session->set_flashdata('error', 'Data gagal di update');
+                redirect('profiladmin');
             }
             redirect('profiladmin');
         }
-    }
-
-    public function editpassword()
-    {
-        $username = $this->session->userdata("username");
-        $data['profil'] = $this->Admin_model->profil($username);
-        $data['title'] = 'Edit Password';
-        $this->load->view('admin/tempelate/header', $data, null);
-        $this->load->view('admin/editpassword', $data, null);
-        $this->load->view('admin/tempelate/footer');
     }
 
     public function updatepassword()
@@ -258,16 +242,6 @@ class Admin extends CI_Controller
             }
             redirect('profiladmin');
         }
-    }
-
-    public function editfoto()
-    {
-        $username = $this->session->userdata("username");
-        $data['profil'] = $this->Admin_model->profil($username);
-        $data['title'] = 'Edit Foto';
-        $this->load->view('admin/tempelate/header', $data, null);
-        $this->load->view('admin/editfoto', $data, null);
-        $this->load->view('admin/tempelate/footer');
     }
 
     public function updatefoto()

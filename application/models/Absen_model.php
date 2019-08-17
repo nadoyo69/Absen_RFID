@@ -87,7 +87,7 @@ class Absen_model extends CI_Model
         $this->db->where('tanggal_masuk', $tanggal_masuk);
         $this->db->order_by('tbl_idabsen', 'DESC');
         $query = $this->db->get('daftar_hadir');
-        return $query->result_array();
+        return $query;
     }
 
     public function total_absen($tanggal_masuk)

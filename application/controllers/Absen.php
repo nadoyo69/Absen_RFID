@@ -15,14 +15,20 @@ class Absen extends CI_Controller
         date_default_timezone_set('Asia/Jakarta');
         $tanggal_masuk = date('Y-m-d');
         $data['total_pegawai'] = $this->Absen_model->total_pegawai();
-        $data['table_absen'] =  $this->Absen_model->table_absen($tanggal_masuk);
         $data['total_absen'] = $this->Absen_model->total_absen($tanggal_masuk);
         $this->load->view('Absen/index', $data, null);
+    }
+
+    function get_product()
+    {
+        date_default_timezone_set('Asia/Jakarta');
+        $tanggal_masuk = date('Y-m-d');
+        $data =  $this->Absen_model->table_absen($tanggal_masuk)->result();
+        echo json_encode($data);
     }
     public function absenrfid()
     {
         $nomor_rfid = ucwords(strtolower($this->security->xss_clean($this->input->get('uid'))));
-
         date_default_timezone_set('Asia/Jakarta');
         $tanggal_masuk = date('Y-m-d');
         $jam = date('H:i:s');
@@ -30,10 +36,9 @@ class Absen extends CI_Controller
         $tahun = date('Y');
 
         $pagi = strtotime('07:00:00');
-        $pagix = strtotime('09:00:00');
-        $sore = strtotime('16:00:00');
-        $sorex = strtotime('18:00:00');
-
+        $pagix = strtotime('23:00:00');
+        $sore = strtotime('23:30:00');
+        $sorex = strtotime('24:00:00');
         if (time() >= $pagi && time() <= $pagix) {
             $result = $this->Absen_model->cekpegawairfid($nomor_rfid);
             if (!empty($result)) {
@@ -52,8 +57,20 @@ class Absen extends CI_Controller
                         'tahun' => $tahun
                     );
                     $this->Absen_model->prosesabsenrfid($datapegawai);
-                    $this->session->set_flashdata('success', 'Presesnsi Berhasil');
-                    redirect('Absen');
+                    $this->load->view('vendor/autoload.php');
+                    $options = array(
+                        'cluster' => 'ap1',
+                        'useTLS' => true
+                    );
+                    $pusher = new Pusher\Pusher(
+                        'daa8c8cd19c2dc18dbb2',
+                        '512487a7a35ad67bde20',
+                        '841021',
+                        $options
+                    );
+
+                    $data['message'] = 'success';
+                    $pusher->trigger('my-channel', 'my-event', $data);
                 }
             } else {
                 $this->session->set_flashdata('error', 'Pegawai tidak TERDAFTAR');
@@ -66,8 +83,20 @@ class Absen extends CI_Controller
                     'jam_keluar' => $jam
                 );
                 $this->Absen_model->prosesabsenpulang($result->koderfid, $datapulang);
-                $this->session->set_flashdata('success', 'Presesnsi Pulang Berhasil');
-                redirect('Absen');
+                $this->load->view('vendor/autoload.php');
+                $options = array(
+                    'cluster' => 'ap1',
+                    'useTLS' => true
+                );
+                $pusher = new Pusher\Pusher(
+                    'daa8c8cd19c2dc18dbb2',
+                    '512487a7a35ad67bde20',
+                    '841021',
+                    $options
+                );
+
+                $data['message'] = 'success';
+                $pusher->trigger('my-channel', 'my-event', $data);
             } else {
                 $this->session->set_flashdata('error', 'Anda Belum Melakukan Presensi Datang');
                 redirect('Absen');

@@ -14,4 +14,26 @@ class Pegawai_model extends CI_Model
         $query = $this->db->get();
         return $query->row();
     }
+    public function total_absen($nama_pegawai, $bulan)
+    {
+        $this->db->where('bulan', $bulan);
+        $this->db->where('nama_pegawai', $nama_pegawai);
+        $query = $this->db->get('daftar_hadir');
+        if ($query->num_rows() > 0) {
+            return $query->num_rows();
+        } else {
+            return 0;
+        }
+    }
+    public function total_absen_tahun($nama_pegawai, $tahun)
+    {
+        $this->db->where('tahun', $tahun);
+        $this->db->where('nama_pegawai', $nama_pegawai);
+        $query = $this->db->get('daftar_hadir');
+        if ($query->num_rows() > 0) {
+            return $query->num_rows();
+        } else {
+            return 0;
+        }
+    }
 }
