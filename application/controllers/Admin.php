@@ -9,7 +9,7 @@ class Admin extends CI_Controller
         $this->load->model('Admin_model');
         $this->load->library('form_validation');
         if ($this->session->userdata('status') != "login") {
-            redirect(base_url("login"));
+            redirect(base_url("Admin"));
         }
     }
 
@@ -373,6 +373,16 @@ class Admin extends CI_Controller
         }
     }
 
+    public function laporan()
+    {
+        $username = $this->session->userdata("username");
+        $data['profil'] = $this->Admin_model->profil($username);
+        $data['title'] = 'Laporan';
+        $this->load->view('admin/tempelate/header', $data, null);
+        $this->load->view('admin/laporan', $data, null);
+        $this->load->view('admin/tempelate/footer');
+    }
+
     public function viewpegawai($tbl_idpegawai)
     {
         $username = $this->session->userdata("username");
@@ -380,13 +390,13 @@ class Admin extends CI_Controller
         $pegawai = $this->Admin_model->getprofilpegawai($tbl_idpegawai);
         $data['title'] = 'Data ' . $pegawai->nama_pegawai;
         $data['viewpegawai'] = $this->Admin_model->getprofilpegawai($tbl_idpegawai);
-        $this->load->view('admin/viewpegawai', $data, null);
+        $this->load->view('admin/laporan/exportpegawai', $data, null);
     }
 
     public function exportexcel()
     {
         $data['pegawai'] = $this->Admin_model->TblPegawai();
-        $this->load->view('admin/exportexcel', $data, null);
+        $this->load->view('admin/laporan/exportexcel', $data, null);
     }
 
     public function exportabsenbulan()
@@ -395,7 +405,7 @@ class Admin extends CI_Controller
         $bulan = date('m');
         $data['title'] = 'Data Absensi Bulan ' . date('M') . ' PT-NADOYO';
         $data['data'] = $this->Admin_model->exportabsenbulan($bulan);
-        $this->load->view('admin/exportabsenexcel', $data, null);
+        $this->load->view('admin/laporan/exportabsenexcel', $data, null);
     }
 
     public function exportabsentahun()
@@ -404,9 +414,25 @@ class Admin extends CI_Controller
         $tahun = date('Y');
         $data['title'] = 'Data Absensi Tahun ' . $tahun . ' PT-NADOYO';
         $data['data'] = $this->Admin_model->exportabsentahun($tahun);
-        $this->load->view('admin/exportabsenexcel', $data, null);
+        $this->load->view('admin/laporan/exportabsenexcel', $data, null);
     }
 
+    public function backupdata()
+    {
+        $this->load->helper('download');
+        $this->load->dbutil();
+        $prefs = array(
+            'format'      => 'zip',
+            'filename'    => 'my_db_backup.sql'
+        );
+        $backup = &$this->dbutil->backup($prefs);
+        $db_name = 'backup-on-' . date("Y-m-d-H-i-s") . '.zip';
+        $save = 'pathtobkfolder/' . $db_name;
+        $this->load->helper('file');
+        write_file($save, $backup);
+        $this->load->helper('download');
+        force_download($db_name, $backup);
+    }
 
     function logout()
     {
@@ -431,6 +457,6 @@ class Admin extends CI_Controller
 
         $this->session->sess_destroy();
 
-        redirect(base_url('login'));
+        redirect(base_url('Admin'));
     }
 }

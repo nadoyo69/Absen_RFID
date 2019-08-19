@@ -54,7 +54,7 @@ $route['absen'] = 'Absen/absen';
 $route['absenrfid'] = 'Absen/absenrfid';
 $route['pulang'] = 'Absen/pulang';
 //admin
-$route['admin'] = 'Admin';
+$route['Dashboard'] = 'Admin';
 $route['datapegawai'] = 'Admin/datapegawai';
 $route['inputdatapegawai'] = 'Admin/inputdatapegawai';
 $route['newpegawai'] = 'Admin/newpegawai';
@@ -69,9 +69,13 @@ $route['updatepegawai'] = 'Admin/updatepegawai';
 $route['resetpasswordpegawai/(:num)'] = 'Admin/resetpasswordpegawai/$1';
 $route['hapuspegawai/(:num)'] = 'Admin/hapuspegawai/$1';
 $route['viewpegawai/(:num)'] = 'Admin/viewpegawai/$1';
+$route['laporan'] = 'Admin/laporan';
+$route['backup'] = 'Admin/backupdata';
+//login Admin
 $route['logout'] = 'Admin/logout';
-$route['login'] = 'Login/loginfix';
-$route['loginotp'] = 'Login/kodeotp';
+$route['Admin'] = 'LoginAdmin';
+$route['AdminOTP'] = 'LoginAdmin/kodeotp';
+$route['AdminOKE'] = 'LoginAdmin/loginfix';
 //pegawai
 $route['pegawai'] = 'LoginPegawai';
 $route['loginpegawai'] = 'LoginPegawai/loginpegawai';
@@ -84,5 +88,5 @@ $route['updateprofilpegawai'] = 'Pegawai/updateprofil';
 $route['updatepasswordpegawai'] = 'Pegawai/updatepassword';
 $route['updatefotopegawai'] = 'Pegawai/updatefoto';
 
-$route['404_override'] = '';
+$route['404_override'] = '404';
 $route['translate_uri_dashes'] = FALSE;

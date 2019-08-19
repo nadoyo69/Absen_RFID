@@ -12,13 +12,24 @@ class Absen extends CI_Controller
 
     public function index()
     {
+        $this->load->view('Absen/index');
+    }
+    function get_total()
+    {
         date_default_timezone_set('Asia/Jakarta');
         $tanggal_masuk = date('Y-m-d');
-        $data['total_pegawai'] = $this->Absen_model->total_pegawai();
-        $data['total_absen'] = $this->Absen_model->total_absen($tanggal_masuk);
-        $this->load->view('Absen/index', $data, null);
+        $data = $this->Absen_model->total_absen($tanggal_masuk);
+        echo json_encode($data);
     }
-
+    function get_absen()
+    {
+        date_default_timezone_set('Asia/Jakarta');
+        $tanggal_masuk = date('Y-m-d');
+        $totalmasuk = $this->Absen_model->total_absen($tanggal_masuk);
+        $totalpegawai = $this->Absen_model->total_pegawai();
+        $data = $totalpegawai - $totalmasuk;
+        echo json_encode($data);
+    }
     function get_product()
     {
         date_default_timezone_set('Asia/Jakarta');
@@ -36,16 +47,31 @@ class Absen extends CI_Controller
         $tahun = date('Y');
 
         $pagi = strtotime('07:00:00');
-        $pagix = strtotime('23:00:00');
-        $sore = strtotime('23:30:00');
-        $sorex = strtotime('24:00:00');
+        $pagix = strtotime('14:00:00');
+        $sore = strtotime('15:00:00');
+        $sorex = strtotime('18:00:00');
+
+        $this->load->view('vendor/autoload.php');
+        $options = array(
+            'cluster' => 'ap1',
+            'useTLS' => true
+        );
+        $pusher = new Pusher\Pusher(
+            'daa8c8cd19c2dc18dbb2',
+            '512487a7a35ad67bde20',
+            '841021',
+            $options
+        );
+
         if (time() >= $pagi && time() <= $pagix) {
             $result = $this->Absen_model->cekpegawairfid($nomor_rfid);
             if (!empty($result)) {
                 $cek = $this->Absen_model->cektanggalrfid($nomor_rfid, $tanggal_masuk);
                 if ($cek > 0) {
-                    $this->session->set_flashdata('error', 'Anda Sudah Melakukan Presensi');
-                    redirect('Absen');
+                    $data['message'] = 'errorsatu';
+                    $pusher->trigger('my-channel', 'my-event', $data);
+
+                    redirect('absen');
                 } else {
                     $datapegawai = array(
                         'nomor_pegawai' => $result->nomor_pegawai,
@@ -57,24 +83,17 @@ class Absen extends CI_Controller
                         'tahun' => $tahun
                     );
                     $this->Absen_model->prosesabsenrfid($datapegawai);
-                    $this->load->view('vendor/autoload.php');
-                    $options = array(
-                        'cluster' => 'ap1',
-                        'useTLS' => true
-                    );
-                    $pusher = new Pusher\Pusher(
-                        'daa8c8cd19c2dc18dbb2',
-                        '512487a7a35ad67bde20',
-                        '841021',
-                        $options
-                    );
 
                     $data['message'] = 'success';
                     $pusher->trigger('my-channel', 'my-event', $data);
+
+                    redirect('absen');
                 }
             } else {
-                $this->session->set_flashdata('error', 'Pegawai tidak TERDAFTAR');
-                redirect('Absen');
+                $data['message'] = 'error';
+                $pusher->trigger('my-channel', 'my-event', $data);
+
+                redirect('absen');
             }
         } else if (time() >= $sore && time() <= $sorex) {
             $result = $this->Absen_model->cekabsendatang($nomor_rfid, $tanggal_masuk);
@@ -83,23 +102,16 @@ class Absen extends CI_Controller
                     'jam_keluar' => $jam
                 );
                 $this->Absen_model->prosesabsenpulang($result->koderfid, $datapulang);
-                $this->load->view('vendor/autoload.php');
-                $options = array(
-                    'cluster' => 'ap1',
-                    'useTLS' => true
-                );
-                $pusher = new Pusher\Pusher(
-                    'daa8c8cd19c2dc18dbb2',
-                    '512487a7a35ad67bde20',
-                    '841021',
-                    $options
-                );
 
                 $data['message'] = 'success';
                 $pusher->trigger('my-channel', 'my-event', $data);
+
+                redirect('absen');
             } else {
-                $this->session->set_flashdata('error', 'Anda Belum Melakukan Presensi Datang');
-                redirect('Absen');
+                $data['message'] = 'errordua';
+                $pusher->trigger('my-channel', 'my-event', $data);
+
+                redirect('absen');
             }
         }
     }

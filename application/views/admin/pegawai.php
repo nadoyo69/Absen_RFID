@@ -1,20 +1,4 @@
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item active" aria-current="page"><a href="<?= base_url('admin'); ?>">Home</a> / Pegawai</li>
-    </ol>
-</nav>
-
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <div class="float-right">
-            <a href="<?= base_url('Admin/exportexcel') ?>" class="btn btn-primary btn-icon-split btn-sm" onClick="return confirm('Apakah Anda Mau Export Ke Excel?')">
-                <span class="icon text-white-50">
-                    <i class="fa fa-file-excel-o"></i>
-                </span>
-                <span class="text">Export To Excel</span>
-            </a>
-        </div>
-    </div>
     <?php
     $this->load->helper('form');
     $error = $this->session->flashdata('error');
@@ -36,7 +20,7 @@
     <?php
     } ?>
     <div class="card-body">
-        <div class="table-responsive">
+        <div class="table-responsive jumbotron">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
@@ -67,10 +51,10 @@
                         <td><?= $data['email'] ?></td>
                         <td><?= $data['alamat'] ?></td>
                         <td class="text-center">
-                            <a target="_blank" href="<?= base_url('viewpegawai/' . $data['tbl_idpegawai']); ?>" class="fa fa-print"></a> |
-                            <a href="<?= base_url('editpegawai/' . $data['tbl_idpegawai']); ?>" class="fa fa-pencil-square-o"></a> |
-                            <a href="<?= base_url('resetpasswordpegawai/' . $data['tbl_idpegawai']) ?>" onClick="return confirm('Apakah Anda benar-benar mau Reset Password?')" class="fa fa-key"></a> |
-                            <a href="<?= base_url('hapuspegawai/' . $data['tbl_idpegawai']) ?>" onClick="return confirm('Apakah Anda benar-benar mau Menghapus Pegawai?')" class="fa fa-trash"></a>
+                            <a target="_blank" href="<?= base_url('viewpegawai/' . $data['tbl_idpegawai']); ?>" class="mdi mdi-cloud-print"></a> |
+                            <a href="<?= base_url('editpegawai/' . $data['tbl_idpegawai']); ?>" class="mdi mdi-account-edit"></a> |
+                            <a href="<?= base_url('resetpasswordpegawai/' . $data['tbl_idpegawai']) ?>" onClick="return confirm('Apakah Anda benar-benar mau Reset Password?')" class="mdi mdi-account-key"></a> |
+                            <a href="<?= base_url('hapuspegawai/' . $data['tbl_idpegawai']) ?>" onClick="return confirm('Apakah Anda benar-benar mau Menghapus Pegawai?')" class="mdi mdi-delete-forever"></a>
                         </td>
                     </tr>
                     <?php endforeach ?>

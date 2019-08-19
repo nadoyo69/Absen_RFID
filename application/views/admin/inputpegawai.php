@@ -1,8 +1,3 @@
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item active" aria-current="page"><a href="<?= base_url('admin'); ?>">Home</a> / Input Data Pegawai</li>
-    </ol>
-</nav>
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Form Input Data</h6>
@@ -20,23 +15,23 @@
             $error = $this->session->flashdata('error');
             if ($error) {
                 ?>
-                <div class="alert alert-danger alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <?php echo $error; ?>
-                </div>
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <?php echo $error; ?>
+            </div>
             <?php
             }
             $success = $this->session->flashdata('success');
             if ($success) {
                 ?>
-                <div class="alert alert-success alert-dismissable">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <?php echo $success; ?>
-                </div>
+            <div class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <?php echo $success; ?>
+            </div>
             <?php
             } ?>
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-6 jumbotron">
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Nama</label>
                         <div class="col-sm-10">
@@ -81,7 +76,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-6 jumbotron">
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Nomor Kartu</label>
                         <div class="col-sm-10">

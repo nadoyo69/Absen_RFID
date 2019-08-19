@@ -1,11 +1,10 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 class Login_model extends CI_Model
 {
-    function updateotp($otp, $username)
+    function updateotp($data, $username)
     {
-        $this->db->set('otp', $otp);
         $this->db->where('username_admin', $username);
-        $this->db->update('admin');
+        $this->db->update('admin', $data);
         return true;
     }
 
@@ -28,16 +27,6 @@ class Login_model extends CI_Model
         }
     }
 
-    public function cekaction($username, $action)
-    {
-        $this->db->select('username_admin,action');
-        $this->db->where('username_admin', $username);
-        $this->db->where('action', $action);
-        $this->db->from('admin');
-        $query = $this->db->get();
-        return $query->row();
-    }
-
     public function LogLoginAdmin($Log)
     {
         $this->db->trans_start();
@@ -46,13 +35,32 @@ class Login_model extends CI_Model
         $this->db->trans_complete();
         return $insert_id;
     }
+
+    public function CekTimeOtp($username_admin)
+    {
+        $this->db->where('username_admin', $username_admin);
+        $this->db->from('admin');
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function cekAdmin($username, $otp)
     {
         $this->db->select('tbl_idadmin,nama_admin,username_admin,password,otp');
         $this->db->where('username_admin', $username);
-        $this->db->where('otp', $otp);
+
         $this->db->from('admin');
         $query = $this->db->get();
-        return $query->row();
+        $user = $query->row();
+
+        if (!empty($user)) {
+            if (verifyHashedPassword($otp, $user->otp)) {
+                return $user;
+            } else {
+                return array();
+            }
+        } else {
+            return array();
+        }
     }
 }
