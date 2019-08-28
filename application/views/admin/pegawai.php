@@ -53,7 +53,6 @@
                         <td class="text-center">
                             <a target="_blank" href="<?= base_url('viewpegawai/' . $data['tbl_idpegawai']); ?>" class="mdi mdi-cloud-print"></a> |
                             <a href="<?= base_url('editpegawai/' . $data['tbl_idpegawai']); ?>" class="mdi mdi-account-edit"></a> |
-                            <a href="<?= base_url('resetpasswordpegawai/' . $data['tbl_idpegawai']) ?>" onClick="return confirm('Apakah Anda benar-benar mau Reset Password?')" class="mdi mdi-account-key"></a> |
                             <a href="<?= base_url('hapuspegawai/' . $data['tbl_idpegawai']) ?>" onClick="return confirm('Apakah Anda benar-benar mau Menghapus Pegawai?')" class="mdi mdi-delete-forever"></a>
                         </td>
                     </tr>

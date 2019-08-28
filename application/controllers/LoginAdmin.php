@@ -37,6 +37,7 @@ class LoginAdmin extends CI_Controller
 
     public function kodeotp()
     {
+        date_default_timezone_set('Asia/Jakarta');
         //form validation
         $this->load->library('form_validation');
         $this->form_validation->set_rules('username', 'Username', 'required|max_length[128]|trim');
@@ -61,16 +62,15 @@ class LoginAdmin extends CI_Controller
                     $otphash .= $chars[mt_rand(0, strlen($chars) - 1)];
                 }
                 $otp = getHashedPassword($otphash);
-                date_default_timezone_set('Asia/Jakarta');
+
                 $timenow = strtotime(date('H:i:s'));
                 $timeend = $timenow + 60;
                 $data = [
                     'otp' => $otp,
-                    'timeotp' => $timeend
+                    'timeotp' => base64_encode($timeend)
                 ];
                 $this->Login_model->updateotp($data, $username);
 
-                date_default_timezone_set('Asia/Jakarta');
                 $waktu = date('Y-m-d H:i:s');
                 $website = "https://api.telegram.org/bot" . $botToken;
                 $chatId = -304126311;
@@ -133,7 +133,7 @@ class LoginAdmin extends CI_Controller
             $timenow = strtotime(date('H:i:s'));
             if (!empty($result)) {
                 $cektime = $this->Login_model->CekTimeOtp($result->username_admin);
-                if ($timenow <= $cektime->timeotp) {
+                if ($timenow <= base64_decode($cektime->timeotp)) {
                     //data yang akan dimasukkan didalam log database
                     $Log = array(
                         'username' => $username,

@@ -17,15 +17,94 @@ $foto = $profil->foto;
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="<?= base_url() ?>assets/admin/css/style.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://js.pusher.com/5.0/pusher.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            show_product();
+            Pusher.logToConsole = true;
+            var pusher = new Pusher('daa8c8cd19c2dc18dbb2', {
+                cluster: 'ap1',
+                forceTLS: true
+            });
+            var channel = pusher.subscribe('my-channel');
+            channel.bind('my-event', function(data) {
+                if (data.message === 'success') {
+                    show_product();
+                }
+            });
+
+            function show_product() {
+                $.ajax({
+                    url: '<?php echo site_url("notifikasiizin"); ?>',
+                    type: 'GET',
+                    async: true,
+                    dataType: 'json',
+                    success: function(data) {
+                        var html = '';
+                        var i;
+                        for (i = 0; i < data.length; i++) {
+                            html +=
+                                '<div class="d-flex no-block align-items-center p-10">' +
+                                '<span class="btn btn-success btn-circle"><i class="ti-user"></i></span>' +
+                                '<div class="m-l-10">' +
+                                '<h5>' + data[i].nama_pegawai + '</h5>' +
+                                '<h6> Jenis Surat "' + data[i].jenis + '"</h6>' +
+                                '<span>' + data[i].DTM + '</span>' +
+                                '</div>' +
+                                '</div>';
+                        }
+                        $('.notifikasi').html(html);
+                    }
+                });
+
+                $.ajax({
+                    type: 'get',
+                    url: '<?php echo site_url("totalnotif"); ?>',
+                    dataType: 'json',
+                    success: function(html) {
+                        $('#totalnotif').html(html);
+                    }
+
+                });
+
+                $.ajax({
+                    url: '<?php echo site_url("notifikasireset"); ?>',
+                    type: 'GET',
+                    async: true,
+                    dataType: 'json',
+                    success: function(data) {
+                        var html = '';
+                        var i;
+                        for (i = 0; i < data.length; i++) {
+                            html +=
+                                '<div class="d-flex no-block align-items-center p-10">' +
+                                '<span class="btn btn-danger btn-circle"><i class="ti-key"></i></span>' +
+                                '<div class="m-l-10">' +
+                                '<h5>' + data[i].nama + '</h5>' +
+                                '<span>' + data[i].tanggal + '</span>' +
+                                '</div>' +
+                                '</div>';
+                        }
+                        $('.notifreset').html(html);
+                    }
+                });
+
+                $.ajax({
+                    type: 'get',
+                    url: '<?php echo site_url("totalnotifreset"); ?>',
+                    dataType: 'json',
+                    success: function(html) {
+                        $('#totalnotifreset').html(html);
+                    }
+
+                });
+            }
+        });
+    </script>
 </head>
 
 <body>
-    <div class="preloader">
-        <div class="lds-ripple">
-            <div class="lds-pos"></div>
-            <div class="lds-pos"></div>
-        </div>
-    </div>
     <div id="main-wrapper">
         <header class="topbar" data-navbarbg="skin5">
             <nav class="navbar top-navbar navbar-expand-md navbar-dark">
@@ -49,28 +128,37 @@ $foto = $profil->foto;
                     </ul>
                     <ul class="navbar-nav float-right">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" id="2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="font-24 mdi mdi-comment-processing"></i>
+                            <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="mdi mdi-bell font-24"></i>
+                                <span class="badge badge-pill badge-danger"><i id="totalnotifreset"></i></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right mailbox animated bounceInDown" aria-labelledby="2">
                                 <ul class="list-style-none">
                                     <li>
-                                        <div class="">
-                                            <a href="javascript:void(0)" class="link border-top">
-                                                <div class="d-flex no-block align-items-center p-10">
-                                                    <span class="btn btn-primary btn-circle"><i class="ti-user"></i></span>
-                                                    <div class="m-l-10">
-                                                        <h5 class="m-b-0">Pavan kumar</h5>
-                                                        <span class="mail-desc">Just see the my admin!</span>
-                                                    </div>
-                                                </div>
-                                            </a>
+                                        <a class="text-center" href="<?= base_url('suratizinmasuk') ?>">VIEW ALL</a>
+                                        <div class="notifreset">
+
                                         </div>
                                     </li>
                                 </ul>
                             </div>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="<?php echo $foto; ?>" alt="user" class="rounded-circle" width="31"></a>
+                            <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" id="2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="font-24 mdi mdi-comment-processing"></i>
+                                <span class="badge badge-pill badge-danger"><i id="totalnotif"></i></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right mailbox animated bounceInDown" aria-labelledby="2">
+                                <ul class="list-style-none">
+                                    <li>
+                                        <a class="text-center" href="<?= base_url('suratizinmasuk') ?>">VIEW ALL</a>
+                                        <div class="notifikasi">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="<?php echo base_url('assets/images/fotoadmin/' . $foto); ?>" alt="user" class="rounded-circle" width="31"></a>
                             <div class="dropdown-menu dropdown-menu-right user-dd animated">
                                 <a class="dropdown-item" href="<?= base_url('profiladmin') ?>"><i class="ti-user m-r-5 m-l-5"></i> My Profile</a>
                                 <a class="dropdown-item" href="<?= base_url('logadmin') ?>"><i class="ti-wallet m-r-5 m-l-5"></i> LOG</a>
@@ -95,6 +183,13 @@ $foto = $profil->foto;
                             </ul>
                         </li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= base_url('daftarhadir') ?>" aria-expanded="false"><i class="mdi mdi-relative-scale"></i><span class="hide-menu">Absensi</span></a></li>
+                        <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-note"></i><span class="hide-menu">Surat Izin </span></a>
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item"><a href="<?= base_url('suratizinmasuk') ?>" class="sidebar-link"><i class="mdi mdi-border-inside"></i><span class="hide-menu"> Surat Izin Masuk </span></a></li>
+                                <li class="sidebar-item"><a href="<?= base_url('dataizin') ?>" class="sidebar-link"><i class="mdi mdi-note-plus"></i><span class="hide-menu">Data Surat Izin </span></a></li>
+                            </ul>
+                        </li>
+                        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= base_url('resetpassword') ?>" aria-expanded="false"><i class="mdi mdi-flag-checkered"></i><span class="hide-menu">Laporan Reset Password</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= base_url('laporan') ?>" aria-expanded="false"><i class="mdi mdi-flag-checkered"></i><span class="hide-menu">Laporan</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= base_url('backup') ?>" onClick="return confirm('Apakah Anda Yakin?')" aria-expanded="false"><i class="mdi mdi-backup-restore"></i><span class="hide-menu">Backup Database</span></a></li>
                     </ul>

@@ -13,24 +13,30 @@ $email =  $profil->email;
 $foto = $profil->foto;
 ?>
 <div class="container bootstrap snippet">
+    <?php $this->load->helper('form'); ?>
+    <div class="row">
+        <div class="col-md-12">
+            <?php echo validation_errors('<div class="alert alert-danger alert-dismissable">', ' <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button></div>'); ?>
+        </div>
+    </div>
     <?php
     $this->load->helper('form');
     $error = $this->session->flashdata('error');
     if ($error) {
         ?>
-        <div class="alert alert-danger alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <?php echo $error; ?>
-        </div>
+    <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <?php echo $error; ?>
+    </div>
     <?php
     }
     $success = $this->session->flashdata('success');
     if ($success) {
         ?>
-        <div class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <?php echo $success; ?>
-        </div>
+    <div class="alert alert-success alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <?php echo $success; ?>
+    </div>
     <?php
     } ?>
     <div class="row">
@@ -42,7 +48,7 @@ $foto = $profil->foto;
                     </div>
                 </div>
 
-                <img src="<?= $foto ?>" class="avatar img-circle img-thumbnail" alt="avatar">
+                <img src="<?php echo base_url('assets/images/fotopegawai/' . $foto); ?>" class="avatar img-circle img-thumbnail" alt="avatar">
             </div>
         </div>
 
@@ -84,7 +90,7 @@ $foto = $profil->foto;
                                 <div class="form-group row">
                                     <label class="col-sm-2 col-form-label">Nomor Pegawai</label>
                                     <div class="col-sm-10">
-                                        <input type="number" name="nip" class="form-control" value="<?= $nip ?>">
+                                        <input type="number" readonly name="nip" class="form-control" value="<?= $nip ?>">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -104,7 +110,7 @@ $foto = $profil->foto;
                                 <div class="form-group row">
                                     <label class="col-sm-2 col-form-label">Jenis Kelamin</label>
                                     <div class="col-sm-10">
-                                        <input type="text" name="jenis" class="form-control" value="<?= $jenis ?>">
+                                        <input type="text" name="jns" class="form-control" value="<?= $jenis ?>">
                                     </div>
                                 </div>
                                 <div class="form-group row">

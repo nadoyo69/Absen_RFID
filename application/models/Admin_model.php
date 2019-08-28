@@ -195,4 +195,76 @@ class Admin_model extends CI_Model
         $query = $this->db->get('daftar_hadir');
         return $query->result_array();
     }
+
+    public function get_SuratIzin()
+    {
+        $this->db->from('surat_izin');
+        $this->db->join('pegawai', 'pegawai.tbl_idpegawai = surat_izin.tbl_idpegawai', 'left');
+        $this->db->where('jenis', 'Izin');
+        $this->db->where('hasil', 'null');
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function get_SuratSakit()
+    {
+        $this->db->from('surat_izin');
+        $this->db->join('pegawai', 'pegawai.tbl_idpegawai = surat_izin.tbl_idpegawai', 'left');
+        $this->db->where('jenis', 'sakit');
+        $this->db->where('hasil', 'null');
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function get_Notifikasi()
+    {
+        $this->db->where('hasil', 'null');
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get('surat_izin');
+        return $query;
+    }
+
+    public function get_TotalNotifikasi()
+    {
+        $this->db->where('hasil', 'null');
+        $query = $this->db->get('surat_izin');
+        if ($query->num_rows() > 0) {
+            return $query->num_rows();
+        } else {
+            return 0;
+        }
+    }
+
+    public function get_HasilSurat($datasurat, $id)
+    {
+        $this->db->where('id', $id);
+        $this->db->update('surat_izin', $datasurat);
+        return true;
+    }
+
+    public function get_DataIzin()
+    {
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get('surat_izin');
+        return $query->result_array();
+    }
+
+    public function get_NotifResetPassword()
+    {
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get('resetpassword');
+        return $query;
+    }
+
+    public function get_TotalNotifikasiReset()
+    {
+        $query = $this->db->get('resetpassword');
+        if ($query->num_rows() > 0) {
+            return $query->num_rows();
+        } else {
+            return 0;
+        }
+    }
 }

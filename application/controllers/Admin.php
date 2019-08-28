@@ -80,7 +80,7 @@ class Admin extends CI_Controller
             $rfid = ucwords(strtolower($this->security->xss_clean($this->input->post('rfid'))));
             $kontak = ucwords(strtolower($this->security->xss_clean($this->input->post('kontak'))));
             $email = ucwords(strtolower($this->security->xss_clean($this->input->post('email'))));
-            $foto = base_url() . 'assets/images/fotopegawai/default.png';
+            $foto = 'default.png';
 
             $cek = $this->Admin_model->ceknamapegawai($nama);
             if ($cek > 0) {
@@ -224,7 +224,7 @@ class Admin extends CI_Controller
             $resultpas = $this->Admin_model->cekpassword($oldpassword);
             if (!empty($resultpas)) {
                 $this->session->set_flashdata('nomatch', 'Password lama Salah');
-                redirect('Admin/editpassword');
+                redirect('profiladmin');
             } else {
 
                 $data = array(
@@ -321,7 +321,7 @@ class Admin extends CI_Controller
         }
     }
 
-    public function resetpasswordpegawai($tbl_idpegawai)
+    /* public function resetpasswordpegawai($tbl_idpegawai)
     {
         date_default_timezone_set('Asia/Jakarta');
         $DTM = date('Y-m-d H:i:s');
@@ -340,7 +340,7 @@ class Admin extends CI_Controller
             $this->session->set_flashdata('error', 'Gagal Reset Password');
             redirect('datapegawai');
         }
-    }
+    } */
 
     public function hapuspegawai($tbl_idpegawai)
     {
@@ -432,6 +432,107 @@ class Admin extends CI_Controller
         write_file($save, $backup);
         $this->load->helper('download');
         force_download($db_name, $backup);
+    }
+
+    public function get_SuratIzinMasuk()
+    {
+        $username = $this->session->userdata("username");
+        $data['profil'] = $this->Admin_model->profil($username);
+        $data['title'] = 'Surat Izin';
+        $data['suratizin'] = $this->Admin_model->get_SuratIzin();
+        $data['suratsakit'] = $this->Admin_model->get_SuratSakit();
+        $this->load->view('admin/tempelate/header', $data, null);
+        $this->load->view('admin/suratizin', $data, null);
+        $this->load->view('admin/tempelate/footer');
+    }
+
+    public function get_Notifikasi()
+    {
+        $data = $this->Admin_model->get_Notifikasi()->result();
+        echo json_encode($data);
+    }
+
+    public function get_TotalNotifikasi()
+    {
+        $data = $this->Admin_model->get_TotalNotifikasi();
+        echo json_encode($data);
+    }
+
+    public function get_AccSurat($id)
+    {
+        date_default_timezone_set('Asia/Jakarta');
+        $DTM = date('Y-m-d H:i:s');
+        $datasurat = [
+            'hasil' => 'ACC',
+            'DTM_hasil' => $DTM
+        ];
+        $this->Admin_model->get_HasilSurat($datasurat, $id);
+
+        $this->load->view('vendor/autoload.php');
+        $options = array(
+            'cluster' => 'ap1',
+            'useTLS' => true
+        );
+        $pusher = new Pusher\Pusher(
+            'daa8c8cd19c2dc18dbb2',
+            '512487a7a35ad67bde20',
+            '841021',
+            $options
+        );
+        $data['message'] = 'success';
+        $pusher->trigger('my-channel', 'my-event', $data);
+
+        redirect('suratizinmasuk');
+    }
+
+    public function get_TolakSurat($id)
+    {
+        date_default_timezone_set('Asia/Jakarta');
+        $DTM = date('Y-m-d H:i:s');
+        $datasurat = [
+            'hasil' => 'DITOLAK',
+            'DTM_hasil' => $DTM
+        ];
+        $this->Admin_model->get_HasilSurat($datasurat, $id);
+
+        $this->load->view('vendor/autoload.php');
+        $options = array(
+            'cluster' => 'ap1',
+            'useTLS' => true
+        );
+        $pusher = new Pusher\Pusher(
+            'daa8c8cd19c2dc18dbb2',
+            '512487a7a35ad67bde20',
+            '841021',
+            $options
+        );
+        $data['message'] = 'success';
+        $pusher->trigger('my-channel', 'my-event', $data);
+
+        redirect('suratizinmasuk');
+    }
+
+    public function get_DataIzin()
+    {
+        $username = $this->session->userdata("username");
+        $data['profil'] = $this->Admin_model->profil($username);
+        $data['title'] = 'Data Izin';
+        $data['dataizin'] = $this->Admin_model->get_DataIzin();
+        $this->load->view('admin/tempelate/header', $data, null);
+        $this->load->view('admin/dataizin', $data, null);
+        $this->load->view('admin/tempelate/footer');
+    }
+
+    public function get_NotifResetPassword()
+    {
+        $data = $this->Admin_model->get_NotifResetPassword()->result();
+        echo json_encode($data);
+    }
+
+    public function get_TotalNotifikasiReset()
+    {
+        $data = $this->Admin_model->get_TotalNotifikasiReset();
+        echo json_encode($data);
     }
 
     function logout()

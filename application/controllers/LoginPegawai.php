@@ -45,7 +45,7 @@ class LoginPegawai extends CI_Controller
                 //session
                 $data_session =  array(
                     'nama_pegawai' => $result->nama_pegawai,
-                    'status' => "login"
+                    'status' => "loginpegawai"
                 );
 
                 //input ke log database
@@ -59,10 +59,6 @@ class LoginPegawai extends CI_Controller
                 $this->load->view('LoginPegawai/login');
             }
         }
-    }
-    public function forgetpassword()
-    {
-        $this->load->view('LoginPegawai/forgetpassword');
     }
     public function forgetpasswordpegawai()
     {
@@ -109,7 +105,22 @@ class LoginPegawai extends CI_Controller
                 curl_close($ch);
 
                 $this->session->set_flashdata('success', 'Reset Password Anda Sedang Diproses Admin, Silahkan Tunggu informasi Selanjutnya');
-                redirect('Pegawai');
+
+                $this->load->view('vendor/autoload.php');
+                $options = array(
+                    'cluster' => 'ap1',
+                    'useTLS' => true
+                );
+                $pusher = new Pusher\Pusher(
+                    'daa8c8cd19c2dc18dbb2',
+                    '512487a7a35ad67bde20',
+                    '841021',
+                    $options
+                );
+                $data['message'] = 'success';
+                $pusher->trigger('my-channel', 'my-event', $data);
+
+                redirect('pegawai');
             } else {
                 $this->session->set_flashdata('error', 'Anda Bukan Pegawai Disini');
                 $this->load->view('LoginPegawai/login');
