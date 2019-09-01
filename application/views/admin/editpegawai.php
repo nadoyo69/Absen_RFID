@@ -2,6 +2,7 @@
 $id = $editpegawai->tbl_idpegawai;
 $nama = $editpegawai->nama_pegawai;
 $nip = $editpegawai->nomor_pegawai;
+$jabatan = $editpegawai->jabatan;
 $rfid = $editpegawai->koderfid;
 ?>
 <div class="container bootstrap snippet">
@@ -25,6 +26,17 @@ $rfid = $editpegawai->koderfid;
                     <label class="col-sm-2 col-form-label">Nomor RFID</label>
                     <div class="col-sm-10">
                         <input type="text" name="rfid" class="form-control" value="<?= $rfid ?>">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Jabatan</label>
+                    <div class="col-sm-10">
+                        <select name="jabatan" class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
+                            <option><?= $jabatan ?></option>
+                            <?php foreach ($jbt as $j) : ?>
+                                <option><?= $j['jabatan'] ?></option>
+                            <?php endforeach ?>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group btn-lg">

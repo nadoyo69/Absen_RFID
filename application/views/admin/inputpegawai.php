@@ -15,19 +15,19 @@
             $error = $this->session->flashdata('error');
             if ($error) {
                 ?>
-            <div class="alert alert-danger alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <?php echo $error; ?>
-            </div>
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <?php echo $error; ?>
+                </div>
             <?php
             }
             $success = $this->session->flashdata('success');
             if ($success) {
                 ?>
-            <div class="alert alert-success alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <?php echo $success; ?>
-            </div>
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <?php echo $success; ?>
+                </div>
             <?php
             } ?>
             <div class="row">
@@ -99,6 +99,16 @@
                         <label class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">
                             <input type="email" name="email" class="form-control" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Jabatan</label>
+                        <div class="col-sm-10">
+                            <select name="jabatan" class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
+                                <?php foreach ($jabatan as $jbt) : ?>
+                                    <option><?= $jbt['jabatan'] ?></option>
+                                <?php endforeach ?>
+                            </select>
                         </div>
                     </div>
                 </div>

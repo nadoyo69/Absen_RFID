@@ -55,19 +55,19 @@
                         $error = $this->session->flashdata('error');
                         if ($error) {
                             ?>
-                        <div class="alert alert-danger alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <?php echo $error; ?>
-                        </div>
+                            <div class="alert alert-danger alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <?php echo $error; ?>
+                            </div>
                         <?php
                         }
                         $success = $this->session->flashdata('success');
                         if ($success) {
                             ?>
-                        <div class="alert alert-success alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <?php echo $success; ?>
-                        </div>
+                            <div class="alert alert-success alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <?php echo $success; ?>
+                            </div>
                         <?php
                         } ?>
                         <div class="row border-top border-secondary">
@@ -84,22 +84,27 @@
                 </div>
                 <div id="recoverform">
                     <div class="text-center">
-                        <span class="text-white">Enter your e-mail address below and we will send you instructions how
-                            to recover a password.</span>
+                        <span class="text-white">Forget Your Password</span>
                     </div>
                     <div class="row m-t-20">
-                        <form class="col-12" action="#">
+                        <form class="col-12" action="<?= base_url() ?>forgetpasswordadmin" method="post">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-danger text-white" id="basic-addon1"><i class="ti-user"></i></span>
+                                </div>
+                                <input type="text" name="nama" class="form-control form-control-lg" placeholder="Nama " aria-label="Username" aria-describedby="basic-addon1">
+                            </div>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-danger text-white" id="basic-addon1"><i class="ti-email"></i></span>
                                 </div>
-                                <input type="text" class="form-control form-control-lg" placeholder="Email Address" aria-label="Username" aria-describedby="basic-addon1">
+                                <input type="email" name="email" class="form-control form-control-lg" placeholder="Email Address" aria-label="Username" aria-describedby="basic-addon1">
                             </div>
 
                             <div class="row m-t-20 p-t-20 border-top border-secondary">
                                 <div class="col-12">
                                     <a class="btn btn-success" href="#" id="to-login" name="action">Back To Login</a>
-                                    <button class="btn btn-info float-right" type="button" name="action">Recover</button>
+                                    <button class="btn btn-info float-right" type="submit" name="action">Recover</button>
                                 </div>
                             </div>
                         </form>

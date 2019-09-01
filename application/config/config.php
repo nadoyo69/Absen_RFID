@@ -381,7 +381,7 @@ $config['encryption_key'] = '27e8b860757d6fb2cf223df1a16b2f17';
 */
 $config['sess_driver'] = 'files';
 $config['sess_cookie_name'] = 'ci_session';
-$config['sess_expiration'] = 3600;
+$config['sess_expiration'] = 900;
 $config['sess_expire_on_close'] = true;
 $config['sess_encrypt_cookie']  = false;
 $config['sess_use_database']    = false;

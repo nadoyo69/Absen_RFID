@@ -47,9 +47,9 @@ class Absen extends CI_Controller
         $tahun = date('Y');
 
         $pagi = strtotime('07:00:00');
-        $pagix = strtotime('14:00:00');
-        $sore = strtotime('15:00:00');
-        $sorex = strtotime('18:00:00');
+        $pagix = strtotime('21:00:00');
+        $sore = strtotime('22:00:00');
+        $sorex = strtotime('24:00:00');
 
         $this->load->view('vendor/autoload.php');
         $options = array(
@@ -113,6 +113,8 @@ class Absen extends CI_Controller
 
                 redirect('absen');
             }
+        } else {
+            redirect('absen');
         }
     }
 }

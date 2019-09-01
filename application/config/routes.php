@@ -66,7 +66,6 @@ $route['updatepassword'] = 'Admin/updatepassword';
 $route['updatefoto'] = 'Admin/updatefoto';
 $route['editpegawai/(:any)'] = 'Admin/editpegawai/$1';
 $route['updatepegawai'] = 'Admin/updatepegawai';
-$route['resetpasswordpegawai/(:num)'] = 'Admin/resetpasswordpegawai/$1';
 $route['hapuspegawai/(:num)'] = 'Admin/hapuspegawai/$1';
 $route['viewpegawai/(:num)'] = 'Admin/viewpegawai/$1';
 $route['laporan'] = 'Admin/laporan';
@@ -77,29 +76,42 @@ $route['totalnotif'] = 'Admin/get_TotalNotifikasi';
 $route['dataizin'] = 'Admin/get_DataIzin';
 $route['accsurat/(:num)'] = 'Admin/get_AccSurat/$1';
 $route['tolaksurat/(:num)'] = 'Admin/get_TolakSurat/$1';
-$route['notifikasireset'] = 'Admin/get_NotifResetPassword';
-$route['totalnotifreset'] = 'Admin/get_TotalNotifikasiReset';
+$route['absenharini'] = 'Admin/get_AbsenHariIni';
+$route['permintaanreset'] = 'Admin/get_viewPermintaanResetPassword';
+$route['jabatan'] = 'Admin/get_Jabatan';
+$route['inputjabatan'] = 'Admin/get_InputJabatan';
+$route['hapusjabatan/(:num)'] = 'Admin/get_DeleteJabatan/$1';
+$route['statuslogin'] = 'Admin/get_StatusLoginPegawai';
+
 //login Admin
 $route['logout'] = 'Admin/logout';
 $route['Admin'] = 'LoginAdmin';
 $route['AdminOTP'] = 'LoginAdmin/kodeotp';
 $route['AdminOKE'] = 'LoginAdmin/loginfix';
+$route['forgetpasswordadmin'] = 'LoginAdmin/get_ForgetPasswordAdmin';
+$route['resetpasswordadmin'] = 'LoginAdmin/get_ViewForgetPasswordAdmin';
+$route['prosesresetpasswordadmin'] = 'LoginAdmin/ChangePassword';
+
+
 //pegawai
 $route['pegawai'] = 'LoginPegawai';
 $route['loginpegawai'] = 'LoginPegawai/loginpegawai';
-$route['forgetpassword'] = 'LoginPegawai/forgetpassword';
 $route['forgetpasswordpegawai'] = 'LoginPegawai/forgetpasswordpegawai';
+$route['resetpassword'] = 'LoginPegawai/get_ViewForgetPasswordPegawai';
+$route['prosesresetpassword'] = 'LoginPegawai/ChangePassword';
 $route['logoutpegawai'] = 'Pegawai/logout';
+
 $route['dashbordpegawai'] = 'Pegawai/index';
 $route['profil'] = 'Pegawai/profil';
 $route['updateprofilpegawai'] = 'Pegawai/get_UpdateProfilPegawai';
 $route['updatepasswordpegawai'] = 'Pegawai/get_UpdatePassword';
-$route['updatefotopegawai'] = 'Pegawai/updatefoto';
+$route['updatefotopegawai'] = 'Pegawai/get_UpdateFoto';
 $route['logpegawai'] = 'Pegawai/get_LogPegawai';
 $route['daftarhadirpegawai'] = 'Pegawai/get_DaftarHadir';
 $route['suratizin'] =  'Pegawai/get_SuratIzin';
 $route['inputsuratizin'] = 'Pegawai/get_InputSuratIzin';
 $route['viewsuratizin'] = 'Pegawai/get_ViewSuratIzin';
+$route['aktivasipegawai'] = 'Pegawai/get_AktivasiPegawai';
 
 $route['404_override'] = '404';
 $route['translate_uri_dashes'] = FALSE;

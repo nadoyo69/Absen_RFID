@@ -14,10 +14,10 @@ class Pegawai_model extends CI_Model
         $query = $this->db->get();
         return $query->row();
     }
-    public function total_absen($nama_pegawai, $bulan)
+    public function total_absen($nomor_pegawai, $bulan)
     {
         $this->db->where('bulan', $bulan);
-        $this->db->where('nama_pegawai', $nama_pegawai);
+        $this->db->where('nomor_pegawai', $nomor_pegawai);
         $query = $this->db->get('daftar_hadir');
         if ($query->num_rows() > 0) {
             return $query->num_rows();
@@ -25,10 +25,10 @@ class Pegawai_model extends CI_Model
             return 0;
         }
     }
-    public function total_absen_tahun($nama_pegawai, $tahun)
+    public function total_absen_tahun($nomor_pegawai, $tahun)
     {
         $this->db->where('tahun', $tahun);
-        $this->db->where('nama_pegawai', $nama_pegawai);
+        $this->db->where('nomor_pegawai', $nomor_pegawai);
         $query = $this->db->get('daftar_hadir');
         if ($query->num_rows() > 0) {
             return $query->num_rows();
@@ -37,17 +37,17 @@ class Pegawai_model extends CI_Model
         }
     }
 
-    public function get_UpdateProfilPegawai($data, $id)
+    public function get_UpdateProfilPegawai($data, $nama_pegawai)
     {
-        $this->db->where('tbl_idpegawai', $id);
+        $this->db->where('nama_pegawai', $nama_pegawai);
         $this->db->update('pegawai', $data);
         return true;
     }
 
-    public function get_CekPasswordLama($oldpassword)
+    public function get_CekPasswordLama($oldpassword, $nama_pegawai)
     {
-        $this->db->where('password', $oldpassword);
-        $this->db->from('admin');
+        $this->db->where('nama_pegawai', $nama_pegawai);
+        $this->db->from('pegawai');
         $query = $this->db->get();
         $user = $query->row();
 
@@ -62,10 +62,17 @@ class Pegawai_model extends CI_Model
         }
     }
 
-    public function get_UpdatePassword($data, $id)
+    public function get_UpdatePassword($data, $nama_pegawai)
     {
-        $this->db->where('tbl_idadmin', $id);
-        $this->db->update('admin', $data);
+        $this->db->where('nama_pegawai', $nama_pegawai);
+        $this->db->update('pegawai', $data);
+        return true;
+    }
+
+    public function get_UpdateFoto($data, $nama_pegawai)
+    {
+        $this->db->where('nama_pegawai', $nama_pegawai);
+        $this->db->update('pegawai', $data);
         return true;
     }
 
@@ -92,5 +99,25 @@ class Pegawai_model extends CI_Model
         $insert_id = $this->db->insert_id();
         $this->db->trans_complete();
         return $insert_id;
+    }
+    public function get_HasilSurat($nomor_pegawai)
+    {
+        $this->db->where('nomor_pegawai', $nomor_pegawai);
+        $query = $this->db->get('surat_izin');
+        return $query->result_array();
+    }
+
+    public function get_UpdateStatusAktif($status, $nama_pegawai)
+    {
+        $this->db->where('nama_pegawai', $nama_pegawai);
+        $this->db->update('status_login', $status);
+        return true;
+    }
+
+    public function get_AktivasiPegawai($aktif, $nama_pegawai)
+    {
+        $this->db->where('nama_pegawai', $nama_pegawai);
+        $this->db->update('pegawai', $aktif);
+        return true;
     }
 }

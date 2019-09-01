@@ -1,10 +1,4 @@
 <div class="card shadow mb-4">
-    <?php $this->load->helper('form'); ?>
-    <div class="row">
-        <div class="col-md-12">
-            <?php echo validation_errors('<div class="alert alert-danger alert-dismissable">', ' <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button></div>'); ?>
-        </div>
-    </div>
     <?php
     $this->load->helper('form');
     $error = $this->session->flashdata('error');
@@ -32,37 +26,28 @@
                     <tr>
                         <th>Nama</th>
                         <th>Nomor Pegawai</th>
-                        <th>Jabatan</th>
-                        <th>Kontak</th>
-                        <th>Email</th>
-                        <th>Alamat</th>
-                        <th>Action</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
                         <th>Nama</th>
                         <th>Nomor Pegawai</th>
-                        <th>Jabatan</th>
-                        <th>Kontak</th>
-                        <th>Email</th>
-                        <th>Alamat</th>
-                        <th>Action</th>
+                        <th>Status</th>
                     </tr>
                 </tfoot>
                 <tbody>
-                    <?php foreach ($pegawai as $data) : ?>
+                    <?php foreach ($status as $data) : ?>
                         <tr>
                             <td><?= $data['nama_pegawai'] ?></td>
                             <td><?= $data['nomor_pegawai'] ?></td>
-                            <td><?= $data['jabatan'] ?></td>
-                            <td><?= $data['nomor_hp_pegawai'] ?></td>
-                            <td><?= $data['email'] ?></td>
-                            <td><?= $data['alamat'] ?></td>
                             <td class="text-center">
-                                <a target="_blank" href="<?= base_url('viewpegawai/' . $data['tbl_idpegawai']); ?>" class="mdi mdi-cloud-print"></a> |
-                                <a href="<?= base_url('editpegawai/' . $data['tbl_idpegawai']); ?>" class="mdi mdi-account-edit"></a> |
-                                <a href="<?= base_url('hapuspegawai/' . $data['tbl_idpegawai']) ?>" onClick="return confirm('Apakah Anda benar-benar mau Menghapus Pegawai?')" class="mdi mdi-delete-forever"></a>
+                                <?php if (time() < $data['time']) { ?>
+                                    <span class="badge badge-pill badge-success">Aktif</span>
+                                <?php } ?>
+                                <?php if (time() > $data['time']) { ?>
+                                    <span class="badge badge-pill badge-danger">Non Aktif</span>
+                                <?php } ?>
                             </td>
                         </tr>
                     <?php endforeach ?>

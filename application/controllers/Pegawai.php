@@ -18,18 +18,33 @@ class Pegawai extends CI_Controller
         date_default_timezone_set('Asia/Jakarta');
         $bulan = date('m');
         $tahun = date('Y');
+        //status Login
         $nama_pegawai = $this->session->userdata("nama_pegawai");
+        $status = [
+            'status' => 1,
+            'time' => time() + 900
+        ];
+
+        $this->Pegawai_model->get_UpdateStatusAktif($status, $nama_pegawai);
         $data['profil'] = $this->Pegawai_model->profil($nama_pegawai);
+        $nomor = $this->Pegawai_model->profil($nama_pegawai);
         $data['title'] = 'Dashbord';
-        $data['absen'] = $this->Pegawai_model->total_absen($nama_pegawai, $bulan);
-        $data['Tahunabsen'] = $this->Pegawai_model->total_absen_tahun($nama_pegawai, $tahun);
+        $data['absen'] = $this->Pegawai_model->total_absen($nomor->nomor_pegawai, $bulan);
+        $data['Tahunabsen'] = $this->Pegawai_model->total_absen_tahun($nomor->nomor_pegawai, $tahun);
         $this->load->view('pegawai/tempelate/header', $data, null);
         $this->load->view('pegawai/index', $data, null);
         $this->load->view('pegawai/tempelate/footer');
     }
     public function profil()
     {
+        //status Login
         $nama_pegawai = $this->session->userdata("nama_pegawai");
+        $status = [
+            'status' => 1,
+            'time' => time() + 900
+        ];
+
+        $this->Pegawai_model->get_UpdateStatusAktif($status, $nama_pegawai);
         $data['profil'] = $this->Pegawai_model->profil($nama_pegawai);
         $data['title'] = 'Profil';
         $this->load->view('Pegawai/tempelate/header', $data, null);
@@ -54,7 +69,7 @@ class Pegawai extends CI_Controller
         if ($this->form_validation->run() == false) {
             $this->profil();
         } else {
-            $id = ucwords(strtolower($this->security->xss_clean($this->input->post('id'))));
+            $nama_pegawai = $this->session->userdata("nama_pegawai");
             $nama = ucwords(strtolower($this->security->xss_clean($this->input->post('nama'))));
             $tmp = ucwords(strtolower($this->security->xss_clean($this->input->post('tmp'))));
             $tgl = ucwords(strtolower($this->security->xss_clean($this->input->post('tgl'))));
@@ -76,7 +91,15 @@ class Pegawai extends CI_Controller
                 'updateDtm' => $DTM
             ];
 
-            $result = $this->Pegawai_model->get_UpdateProfilPegawai($data, $id);
+            //status Login
+            $status = [
+                'status' => 1,
+                'time' => time() + 900
+            ];
+
+            $this->Pegawai_model->get_UpdateStatusAktif($status, $nama_pegawai);
+
+            $result = $this->Pegawai_model->get_UpdateProfilPegawai($data, $nama_pegawai);
             if ($result == true) {
                 $this->session->set_userdata('nama_pegawai', $nama);
                 $this->session->set_flashdata('success', 'Data berhasil di Update');
@@ -101,11 +124,11 @@ class Pegawai extends CI_Controller
         if ($this->form_validation->run() == false) {
             $this->profil();
         } else {
-            $id = $this->input->post('id');
+            $nama_pegawai = $this->session->userdata("nama_pegawai");
             $oldpassword = $this->input->post('oldpassword');
             $newpassword = $this->input->post('password1');
 
-            $resultpas = $this->Pegawai_model->get_CekPasswordLama($oldpassword);
+            $resultpas = $this->Pegawai_model->get_CekPasswordLama($oldpassword, $nama_pegawai);
             if (empty($resultpas)) {
                 $this->session->set_flashdata('error', 'Password lama Salah');
                 redirect('profil');
@@ -116,7 +139,15 @@ class Pegawai extends CI_Controller
                     'updateDtm' => $DTM
                 );
 
-                $result = $this->Pegawai_model->get_UpdatePassword($data, $id);
+                //status Login
+                $status = [
+                    'status' => 1,
+                    'time' => time() + 900
+                ];
+
+                $this->Pegawai_model->get_UpdateStatusAktif($status, $nama_pegawai);
+
+                $result = $this->Pegawai_model->get_UpdatePassword($data, $nama_pegawai);
 
                 if ($result > 0) {
                     $this->session->set_flashdata('success', 'Password Berhasil diUpdate');
@@ -128,9 +159,44 @@ class Pegawai extends CI_Controller
         }
     }
 
+    public function get_UpdateFoto()
+    {
+        $config['upload_path'] = './assets/images/fotopegawai/';
+        $config['allowed_types'] = 'jpg|jpeg|png';
+        $config['max_size'] = '2048';
+        $this->load->library('upload', $config);
+
+        $nama_pegawai = $this->session->userdata("nama_pegawai");
+        $this->upload->do_upload('foto');
+        $upload_data = $this->upload->data();
+        $file_name =   $upload_data['file_name'];
+        $foto = $file_name;
+
+        $data = array(
+            'foto' => $foto
+        );
+
+        $result = $this->Pegawai_model->get_UpdateFoto($data, $nama_pegawai);
+
+        if ($result == true) {
+            $this->session->set_flashdata('success', 'Update Foto Berhasil');
+        } else {
+            $this->session->set_flashdata('error', 'Update Foto Gagal');
+        }
+
+        redirect('profil');
+    }
+
     public function get_LogPegawai()
     {
+        //status Login
         $nama_pegawai = $this->session->userdata("nama_pegawai");
+        $status = [
+            'status' => 1,
+            'time' => time() + 900
+        ];
+
+        $this->Pegawai_model->get_UpdateStatusAktif($status, $nama_pegawai);
         $data['profil'] = $this->Pegawai_model->profil($nama_pegawai);
         $data['logadmin'] = $this->Pegawai_model->get_LogPegawai($nama_pegawai);
         $data['title'] = 'Data Log';
@@ -143,7 +209,14 @@ class Pegawai extends CI_Controller
     {
         date_default_timezone_set('Asia/Jakarta');
         $bulan = date('m');
+        //status Login
         $nama_pegawai = $this->session->userdata("nama_pegawai");
+        $status = [
+            'status' => 1,
+            'time' => time() + 900
+        ];
+
+        $this->Pegawai_model->get_UpdateStatusAktif($status, $nama_pegawai);
         $data['profil'] = $this->Pegawai_model->profil($nama_pegawai);
         $data['title'] = 'Daftar Hadir';
         $ceknip = $this->Pegawai_model->profil($nama_pegawai);
@@ -155,7 +228,14 @@ class Pegawai extends CI_Controller
 
     public function get_SuratIzin()
     {
+        //status Login
         $nama_pegawai = $this->session->userdata("nama_pegawai");
+        $status = [
+            'status' => 1,
+            'time' => time() + 900
+        ];
+
+        $this->Pegawai_model->get_UpdateStatusAktif($status, $nama_pegawai);
         $data['profil'] = $this->Pegawai_model->profil($nama_pegawai);
         $data['title'] = 'Surat Izin';
         $this->load->view('pegawai/tempelate/header', $data, null);
@@ -197,6 +277,14 @@ class Pegawai extends CI_Controller
                 'hasil' => 'null'
             ];
 
+            //status Login
+            $nama_pegawai = $this->session->userdata("nama_pegawai");
+            $status = [
+                'status' => 1,
+                'time' => time() + 900
+            ];
+
+            $this->Pegawai_model->get_UpdateStatusAktif($status, $nama_pegawai);
             $result = $this->Pegawai_model->get_InputSuratIzin($dataizin);
 
             if ($result > 0) {
@@ -225,16 +313,45 @@ class Pegawai extends CI_Controller
 
     public function get_ViewSuratIzin()
     {
+        //status Login
         $nama_pegawai = $this->session->userdata("nama_pegawai");
+        $status = [
+            'status' => 1,
+            'time' => time() + 900
+        ];
+
+        $this->Pegawai_model->get_UpdateStatusAktif($status, $nama_pegawai);
         $data['profil'] = $this->Pegawai_model->profil($nama_pegawai);
         $data['title'] = 'Surat Izin';
+        $nomor = $this->Pegawai_model->profil($nama_pegawai);
+        $data['hasilsurat'] = $this->Pegawai_model->get_HasilSurat($nomor->nomor_pegawai);
         $this->load->view('pegawai/tempelate/header', $data, null);
         $this->load->view('pegawai/suratizin', $data, null);
         $this->load->view('pegawai/tempelate/footer');
     }
 
+    public function get_AktivasiPegawai()
+    {
+        $nama_pegawai = $this->session->userdata("nama_pegawai");
+        $aktif = ['active' => 1];
+        $result = $this->Pegawai_model->get_AktivasiPegawai($aktif, $nama_pegawai);
+        if (!empty($result)) {
+            $this->session->set_flashdata('success', 'Status Anda Telah Berubah Menjadi Aktif dan Silahkan <button class="btn btn-primary"><a class="text-white" href="' . base_url('profil') . '"> klik Disini </a></button> Untuk Mengganti Password Akun Anda');
+            redirect('dashbordpegawai');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal Aktivasi! Silahkan Coba Lagi');
+            redirect('dashbordpegawai');
+        }
+    }
+
     function logout()
     {
+        $nama_pegawai = $this->session->userdata("nama_pegawai");
+        $status = [
+            'status' => 0,
+            'time' => 0
+        ];
+        $this->Pegawai_model->get_UpdateStatusAktif($status, $nama_pegawai);
         $this->session->sess_destroy();
         redirect(base_url('pegawai'));
     }

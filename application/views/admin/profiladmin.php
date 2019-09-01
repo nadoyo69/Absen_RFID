@@ -11,6 +11,12 @@ $foto = $profil->foto;
 $password = $profil->password;
 ?>
 <div class="container bootstrap snippet">
+    <?php $this->load->helper('form'); ?>
+    <div class="row">
+        <div class="col-md-12">
+            <?php echo validation_errors('<div class="alert alert-danger alert-dismissable">', ' <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button></div>'); ?>
+        </div>
+    </div>
     <?php
     $this->load->helper('form');
     $error = $this->session->flashdata('error');
@@ -40,7 +46,7 @@ $password = $profil->password;
                     </div>
                 </div>
 
-                <img src="<?= $foto ?>" class="avatar img-circle img-thumbnail" alt="avatar">
+                <img src="<?= base_url('assets/images/fotoadmin/') . $foto ?>" class="avatar img-circle img-thumbnail" alt="avatar">
             </div>
         </div>
 
@@ -61,14 +67,13 @@ $password = $profil->password;
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Nama</label>
                             <div class="col-sm-10">
-                                <input type="text" hidden name="id" class="form-control" value="<?= $tbl_idadmin ?>">
                                 <input type="text" name="nama" class="form-control" value="<?= $nama ?>">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Username</label>
                             <div class="col-sm-10">
-                                <input type="text" name="username" class="form-control" value="<?= $username ?>">
+                                <input type="text" name="user_name" class="form-control" value="<?= $username ?>">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -113,7 +118,6 @@ $password = $profil->password;
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Password Lama</label>
                             <div class="col-sm-10">
-                                <input type="text" hidden value="<?= $tbl_idadmin ?>" name="id" class="form-control">
                                 <input type="password" name="oldpassword" class="form-control" placeholder="Password Lama">
                             </div>
                         </div>
@@ -139,8 +143,7 @@ $password = $profil->password;
                         <div class="form-group row">
                             <label class="col-sm-2">Foto</label>
                             <div class="col-sm-10">
-                                <input type="text" hidden name="id" value="<?= $tbl_idadmin ?>">
-                                <input type="file" class="form-control required" name="foto">
+                                <input name="foto" type="file" class="form-control required">
                             </div>
                         </div>
                         <button class="btn btn-danger float-right" type="reset"> Reset </button>

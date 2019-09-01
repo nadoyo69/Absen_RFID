@@ -10,6 +10,7 @@ $agama = $viewpegawai->agama;
 $email = $viewpegawai->email;
 $nip = $viewpegawai->nomor_pegawai;
 $foto = $viewpegawai->foto;
+$jabatan = $viewpegawai->jabatan;
 ?>
 
 <!DOCTYPE html>
@@ -109,6 +110,12 @@ $foto = $viewpegawai->foto;
                                                 <label class="col-sm-2 col-form-label">Nomor Pegawai</label>
                                                 <div class="col-sm-10">
                                                     <div type="text" class="form-control"><?= $nip ?></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Jabatan</label>
+                                                <div class="col-sm-10">
+                                                    <div type="text" class="form-control"><?= $jabatan ?></div>
                                                 </div>
                                             </div>
                                         </form>

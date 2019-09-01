@@ -67,38 +67,6 @@ $foto = $profil->foto;
                     }
 
                 });
-
-                $.ajax({
-                    url: '<?php echo site_url("notifikasireset"); ?>',
-                    type: 'GET',
-                    async: true,
-                    dataType: 'json',
-                    success: function(data) {
-                        var html = '';
-                        var i;
-                        for (i = 0; i < data.length; i++) {
-                            html +=
-                                '<div class="d-flex no-block align-items-center p-10">' +
-                                '<span class="btn btn-danger btn-circle"><i class="ti-key"></i></span>' +
-                                '<div class="m-l-10">' +
-                                '<h5>' + data[i].nama + '</h5>' +
-                                '<span>' + data[i].tanggal + '</span>' +
-                                '</div>' +
-                                '</div>';
-                        }
-                        $('.notifreset').html(html);
-                    }
-                });
-
-                $.ajax({
-                    type: 'get',
-                    url: '<?php echo site_url("totalnotifreset"); ?>',
-                    dataType: 'json',
-                    success: function(html) {
-                        $('#totalnotifreset').html(html);
-                    }
-
-                });
             }
         });
     </script>
@@ -127,21 +95,6 @@ $foto = $profil->foto;
                         <li class="nav-item d-none d-md-block"><a class="nav-link sidebartoggler waves-effect waves-light" href="javascript:void(0)" data-sidebartype="mini-sidebar"><i class="mdi mdi-menu font-24"></i></a></li>
                     </ul>
                     <ul class="navbar-nav float-right">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="mdi mdi-bell font-24"></i>
-                                <span class="badge badge-pill badge-danger"><i id="totalnotifreset"></i></span>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right mailbox animated bounceInDown" aria-labelledby="2">
-                                <ul class="list-style-none">
-                                    <li>
-                                        <a class="text-center" href="<?= base_url('suratizinmasuk') ?>">VIEW ALL</a>
-                                        <div class="notifreset">
-
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" id="2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="font-24 mdi mdi-comment-processing"></i>
@@ -182,6 +135,8 @@ $foto = $profil->foto;
                                 <li class="sidebar-item"><a href="<?= base_url('inputdatapegawai') ?>" class="sidebar-link"><i class="mdi mdi-note-plus"></i><span class="hide-menu"> Input Data Pegawai </span></a></li>
                             </ul>
                         </li>
+                        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= base_url('jabatan') ?>" aria-expanded="false"><i class="mdi mdi-account"></i><span class="hide-menu">Jabatan Pegawai</span></a></li>
+                        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= base_url('absenharini') ?>" aria-expanded="false"><i class="mdi mdi-relative-scale"></i><span class="hide-menu">Absen Perhari</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= base_url('daftarhadir') ?>" aria-expanded="false"><i class="mdi mdi-relative-scale"></i><span class="hide-menu">Absensi</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-note"></i><span class="hide-menu">Surat Izin </span></a>
                             <ul aria-expanded="false" class="collapse  first-level">
@@ -189,8 +144,9 @@ $foto = $profil->foto;
                                 <li class="sidebar-item"><a href="<?= base_url('dataizin') ?>" class="sidebar-link"><i class="mdi mdi-note-plus"></i><span class="hide-menu">Data Surat Izin </span></a></li>
                             </ul>
                         </li>
-                        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= base_url('resetpassword') ?>" aria-expanded="false"><i class="mdi mdi-flag-checkered"></i><span class="hide-menu">Laporan Reset Password</span></a></li>
+                        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= base_url('permintaanreset') ?>" aria-expanded="false"><i class="mdi mdi-flag-checkered"></i><span class="hide-menu">Laporan Reset Password</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= base_url('laporan') ?>" aria-expanded="false"><i class="mdi mdi-flag-checkered"></i><span class="hide-menu">Laporan</span></a></li>
+                        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= base_url('statuslogin') ?>" aria-expanded="false"><i class="mdi mdi-nest-thermostat"></i><span class="hide-menu">Status Login</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= base_url('backup') ?>" onClick="return confirm('Apakah Anda Yakin?')" aria-expanded="false"><i class="mdi mdi-backup-restore"></i><span class="hide-menu">Backup Database</span></a></li>
                     </ul>
                 </nav>

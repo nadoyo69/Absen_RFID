@@ -17,7 +17,7 @@ class LoginPegawai extends CI_Controller
     public function loginpegawai()
     {
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('email', 'Email', 'required');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
         $this->form_validation->set_rules('password', 'Password', 'required|trim');
 
         if ($this->form_validation->run() == false) {
@@ -40,7 +40,17 @@ class LoginPegawai extends CI_Controller
                     'platform' => $_SERVER['HTTP_USER_AGENT'],
                     'tanggal_login' => $tanggal_login,
                     'jam_login' => $jam_login,
+                    'bulan' => date('m'),
+                    'tahun' => date('Y')
                 );
+
+                //status Aktif Login
+                $status = [
+                    'nama_pegawai' => $result->nama_pegawai,
+                    'nomor_pegawai' => $result->nomor_pegawai,
+                    'status' => 1,
+                    'time' => time() + 900
+                ];
 
                 //session
                 $data_session =  array(
@@ -50,6 +60,20 @@ class LoginPegawai extends CI_Controller
 
                 //input ke log database
                 $this->LoginPegawai_model->LogLogin($Log);
+
+                //cek apakah di dalam tabel sudah ada nama tersebut
+                $statusaktif = $this->LoginPegawai_model->get_CekStatusPegawai($result->nomor_pegawai);
+                if (empty($statusaktif)) {
+                    //jika belum masuk disini
+                    $this->LoginPegawai_model->get_InsertStatusAktif($status);
+                } else {
+                    //jika sudah masuk disini
+                    $updatestatus = [
+                        'status' => 1,
+                        'time' => time() + 900
+                    ];
+                    $this->LoginPegawai_model->get_UpdateStatusAktif($updatestatus, $result->nomor_pegawai);
+                }
                 $this->session->set_userdata($data_session);
 
                 redirect('dashbordpegawai');
@@ -63,67 +87,123 @@ class LoginPegawai extends CI_Controller
     public function forgetpasswordpegawai()
     {
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('email', 'Email', 'required');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
         $this->form_validation->set_rules('nama', 'Nama', 'required');
 
         if ($this->form_validation->run() == false) {
-            $this->load->view('LoginPegawai/forgetpassword');
+            redirect('pegawai');
         } else {
             $email = strtolower($this->security->xss_clean($this->input->post('email')));
-            $nama = $this->input->post('nama');
+            $nama = strtolower($this->security->xss_clean($this->input->post('nama')));
             $result = $this->LoginPegawai_model->cekresetpegawai($email);
             date_default_timezone_set('Asia/Jakarta');
             $tanggal = date('Y-m-d');
             $jam = date('H:i:s');
 
             if (!empty($result)) {
+
+                $token = base64_encode(random_bytes(32));
+                $timestring = time();
+                $timend = $timestring + 500;
+
                 $data = array(
                     'email' => $email,
                     'nama' => $nama,
                     'tanggal' => $tanggal,
-                    'jam' => $jam
+                    'jam' => $jam,
+                    'timend' => $timend,
+                    'token' => $token
                 );
                 $this->LoginPegawai_model->resetpassword($data);
 
-                $botToken = "972979337:AAGQ5o0QZ1TgL-CzbOYqJrDE6GGU_cJv5ks";
-                $perangkat = $_SERVER['HTTP_USER_AGENT'];
-                date_default_timezone_set('Asia/Jakarta');
-                $waktu = date('Y-m-d H:i:s');
-                $website = "https://api.telegram.org/bot" . $botToken;
-                $chatId = -304126311;
-                $params = [
-                    'chat_id' => $chatId,
-                    'text' => 'Pegawai Atas Nama ' . $nama . ' dengan email ' . $email . ' Ingin Mereset Passwordnya. Perangkat Yang digunakan adalah ' . $perangkat
-                ];
-                $ch = curl_init($website . '/sendMessage');
-                curl_setopt($ch, CURLOPT_HEADER, false);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, ($params));
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                $result = curl_exec($ch);
-                curl_close($ch);
-
-                $this->session->set_flashdata('success', 'Reset Password Anda Sedang Diproses Admin, Silahkan Tunggu informasi Selanjutnya');
-
-                $this->load->view('vendor/autoload.php');
-                $options = array(
-                    'cluster' => 'ap1',
-                    'useTLS' => true
-                );
-                $pusher = new Pusher\Pusher(
-                    'daa8c8cd19c2dc18dbb2',
-                    '512487a7a35ad67bde20',
-                    '841021',
-                    $options
-                );
-                $data['message'] = 'success';
-                $pusher->trigger('my-channel', 'my-event', $data);
-
+                $this->_senEmail($email, $token);
+                $this->session->set_flashdata('success', 'Silahkan Cek Email Anda Untuk Reset Password!');
                 redirect('pegawai');
             } else {
-                $this->session->set_flashdata('error', 'Anda Bukan Pegawai Disini');
-                $this->load->view('LoginPegawai/login');
+                $this->session->set_flashdata('error', 'Anda Bukan Pegawai Disini!');
+                redirect('pegawai');
+            }
+        }
+    }
+
+    private function _senEmail($email, $token)
+    {
+        $config = [
+            'protocol' => 'smtp',
+            'smtp_host' => 'smtp.gmail.com',
+            'smtp_user' => 'pictnadoyo@gmail.com',
+            'smtp_pass' => 'Qwertyuiop12345?',
+            'smtp_port' => 587,
+            'mailtype' => 'html',
+            'charset' => 'utf-8',
+            'newline' => "\r\n"
+        ];
+
+        $this->load->library('email', $config);
+
+        $this->email->from('pictnadoyo@gmail.com', 'Admin PT-Nadoyo');
+        $this->email->to($email);
+        $this->email->subject('Reset Password PT-Nadoyo');
+        $this->email->message('Silahkan Klik link untuk Reset Password : <a href="' . base_url() . 'resetpassword?email=' . $email . '&token=' . urlencode($token) . '">Reset Password</a>');
+
+        if ($this->email->send()) {
+            return true;
+        } else {
+            echo $this->email->print_debugger();
+            die;
+        }
+    }
+
+    public function get_ViewForgetPasswordPegawai()
+    {
+        $email = $this->input->get('email');
+        $token = $this->input->get('token');
+
+        $user = $this->LoginPegawai_model->cekresetpegawai($email);
+        if ($user) {
+            $user_token = $this->LoginPegawai_model->get_CekTokenPegawai($token, $email);
+            if ($user_token) {
+                $cektime = $this->LoginPegawai_model->get_CekTimeToken($email, $token);
+                if (time() < $cektime->timend) {
+                    $this->session->set_userdata('reset_email', $email);
+                    $this->ChangePassword();
+                } else {
+                    $this->session->set_flashdata('error', 'Waktu Telah Habis!');
+                    redirect('pegawai');
+                }
+            } else {
+                $this->session->set_flashdata('error', 'Reset Password Gagal! Token Salah!');
+                redirect('pegawai');
+            }
+        } else {
+            $this->session->set_flashdata('error', 'Reset Password Gagal! Email Salah!');
+            redirect('pegawai');
+        }
+    }
+
+    public function ChangePassword()
+    {
+
+        if (!$this->session->userdata('reset_email')) {
+            redirect('pegawai');
+        } else {
+            $this->load->library('form_validation');
+            $this->form_validation->set_rules('password1', 'Password', 'required|matches[password2]');
+            $this->form_validation->set_rules('password2', 'Repeat Password', 'required|matches[password2]');
+
+            if ($this->form_validation->run() == false) {
+                $this->load->view('LoginPegawai/resetpassword');
+            } else {
+                $email = $this->session->userdata('reset_email');
+
+                $pass = $this->input->post('password1');
+                $password = getHashedPassword($pass);
+                $this->LoginPegawai_model->get_prosesresetpassword($email, $password);
+
+                $this->session->unset_userdata('reset_email');
+
+                $this->session->set_flashdata('success', 'Password berhasil diganti');
+                redirect('pegawai');
             }
         }
     }

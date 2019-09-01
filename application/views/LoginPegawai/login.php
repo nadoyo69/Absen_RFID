@@ -55,19 +55,19 @@
                         $error = $this->session->flashdata('error');
                         if ($error) {
                             ?>
-                        <div class="alert alert-danger alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <?php echo $error; ?>
-                        </div>
+                            <div class="alert alert-danger alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <?php echo $error; ?>
+                            </div>
                         <?php
                         }
                         $success = $this->session->flashdata('success');
                         if ($success) {
                             ?>
-                        <div class="alert alert-success alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <?php echo $success; ?>
-                        </div>
+                            <div class="alert alert-success alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <?php echo $success; ?>
+                            </div>
                         <?php
                         } ?>
                         <div class="row border-top border-secondary">
@@ -84,8 +84,7 @@
                 </div>
                 <div id="recoverform">
                     <div class="text-center">
-                        <span class="text-white">Enter your e-mail address below and we will send you instructions how
-                            to recover a password.</span>
+                        <span class="text-white">Forget Your Password</span>
                     </div>
                     <div class="row m-t-20">
                         <form class="col-12" action="<?= base_url(); ?>forgetpasswordpegawai" method="post">

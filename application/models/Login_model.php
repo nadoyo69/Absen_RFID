@@ -63,4 +63,43 @@ class Login_model extends CI_Model
             return array();
         }
     }
+
+    public function get_ForgetCekAdmin($email)
+    {
+        $this->db->where('email_admin', $email);
+        $query = $this->db->get('admin');
+        return $query->row_array();
+    }
+
+    public function get_InsertResetPassword($data)
+    {
+        $this->db->trans_start();
+        $this->db->insert('resetpassword', $data);
+        $insert_id = $this->db->insert_id();
+        $this->db->trans_complete();
+        return $insert_id;
+    }
+    public function get_CekTokenAdmin($token, $email)
+    {
+        $this->db->where('token', $token);
+        $this->db->where('email', $email);
+        $query = $this->db->get('resetpassword');
+        return $query->row_array();
+    }
+    public function get_CekTimeToken($email, $token)
+    {
+        $this->db->select('id,email,timend,token');
+        $this->db->where('email', $email);
+        $this->db->where('token', $token);
+        $this->db->from('resetpassword');
+        $query = $this->db->get();
+        return $query->row();
+    }
+    public function get_prosesresetpassword($email, $password)
+    {
+        $this->db->set('password', $password);
+        $this->db->where('email_admin', $email);
+        $this->db->update('admin');
+        return true;
+    }
 }

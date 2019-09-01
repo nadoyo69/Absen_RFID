@@ -21,9 +21,14 @@ class Admin extends CI_Controller
         date_default_timezone_set('Asia/Jakarta');
         $tanggal = date('Y-m-d');
         $bulan = date('m');
-        $data['grafik'] = $this->Admin_model->grafik($bulan);
+        $tahun = date('Y');
+        $data['grafik'] = $this->Admin_model->grafik($bulan, $tahun);
+        $data['grafiklogin'] = $this->Admin_model->grafiklogin($bulan, $tahun);
         $data['absen_hari_ini'] = $this->Admin_model->absen_hari_ini($tanggal);
-        $data['total_pegawai'] = $this->Admin_model->total_pegawai();
+        $data['total_pegawai'] = $this->Admin_model->total_pegawai_aktif();
+        $data['total_pegawai_nonaktif'] = $this->Admin_model->total_pegawai_nonaktif();
+        $data['total_permintaan_izin'] = $this->Admin_model->get_TotalNotifikasi();
+        $data['resetpassword'] = $this->Admin_model->get_TotalResetPassword();
         $this->load->view('admin/tempelate/header', $data, NULL);
         $this->load->view('admin/dashbord', $data, NULL);
         $this->load->view('admin/tempelate/footer');
@@ -45,6 +50,7 @@ class Admin extends CI_Controller
     {
         $username = $this->session->userdata("username");
         $data['profil'] = $this->Admin_model->profil($username);
+        $data['jabatan'] = $this->Admin_model->get_Jabatan();
         $data['title'] = 'Input Data Pegawai';
         $this->load->view('admin/tempelate/header', $data, null);
         $this->load->view('admin/inputpegawai');
@@ -63,6 +69,7 @@ class Admin extends CI_Controller
         $this->form_validation->set_rules('rfid', 'Nomor Kartu', 'required');
         $this->form_validation->set_rules('kontak', 'Kontak', 'required');
         $this->form_validation->set_rules('email', 'Email', 'required');
+        $this->form_validation->set_rules('jabatan', 'Jabatan', 'required');
 
         date_default_timezone_set('Asia/Jakarta');
         $DTM = date('Y-m-d H:i:s');
@@ -80,6 +87,7 @@ class Admin extends CI_Controller
             $rfid = ucwords(strtolower($this->security->xss_clean($this->input->post('rfid'))));
             $kontak = ucwords(strtolower($this->security->xss_clean($this->input->post('kontak'))));
             $email = ucwords(strtolower($this->security->xss_clean($this->input->post('email'))));
+            $jabatan = ucwords(strtolower($this->security->xss_clean($this->input->post('jabatan'))));
             $foto = 'default.png';
 
             $cek = $this->Admin_model->ceknamapegawai($nama);
@@ -103,6 +111,7 @@ class Admin extends CI_Controller
                             'tempat_lahir_pegawai' => $tempat_lahir,
                             'nomor_hp_pegawai' => $kontak,
                             'nomor_pegawai' => $nip,
+                            'jabatan' => $jabatan,
                             'koderfid' => $rfid,
                             'foto' => $foto,
                             'password' =>  getHashedPassword('12345'),
@@ -116,8 +125,10 @@ class Admin extends CI_Controller
                         $result = $this->Admin_model->uploaddata($data);
                         if ($result > 0) {
                             $this->session->set_flashdata('success', 'Data Berhasil di Tambah');
+                            redirect('Admin/inputdatapegawai');
                         } else {
                             $this->session->set_flashdata('error', 'Gagal upload data');
+                            redirect('Admin/inputdatapegawai');
                         }
                     }
                 }
@@ -160,7 +171,7 @@ class Admin extends CI_Controller
     public function updateprofil()
     {
         $this->form_validation->set_rules('nama', 'Nama', 'required');
-        $this->form_validation->set_rules('username', 'Username', 'required');
+        $this->form_validation->set_rules('user_name', 'Username', 'required');
         $this->form_validation->set_rules('email', 'Email', 'required');
         $this->form_validation->set_rules('kontak', 'Kontak', 'required');
         $this->form_validation->set_rules('alamat', 'Alamat', 'required');
@@ -171,11 +182,11 @@ class Admin extends CI_Controller
         $DTM = date('Y-m-d H:i:s');
 
         if ($this->form_validation->run() == false) {
-            $this->editprofil();
+            $this->profiladmin();
         } else {
-            $id = ucwords(strtolower($this->security->xss_clean($this->input->post('id'))));
+            $usernama_session = $this->session->userdata("username");
             $nama = ucwords(strtolower($this->security->xss_clean($this->input->post('nama'))));
-            $username = ucwords(strtolower($this->security->xss_clean($this->input->post('username'))));
+            $username = ucwords(strtolower($this->security->xss_clean($this->input->post('user_name'))));
             $email = ucwords(strtolower($this->security->xss_clean($this->input->post('email'))));
             $kontak = ucwords(strtolower($this->security->xss_clean($this->input->post('kontak'))));
             $alamat = ucwords(strtolower($this->security->xss_clean($this->input->post('alamat'))));
@@ -193,7 +204,7 @@ class Admin extends CI_Controller
                 'updateDtm' => $DTM
             );
 
-            $result = $this->Admin_model->updateprofil($data, $id);
+            $result = $this->Admin_model->updateprofil($data, $usernama_session);
             if ($result == true) {
                 $this->session->set_userdata('username', $username);
                 $this->session->set_flashdata('success', 'Data berhasil di Update');
@@ -213,17 +224,16 @@ class Admin extends CI_Controller
         $this->form_validation->set_rules('oldpassword', 'Password Lama', 'required');
         $this->form_validation->set_rules('password1', 'Password Baru', 'required');
         $this->form_validation->set_rules('password2', 'Konfimasi Password', 'required|matches[password1]');
-
+        $usernama_session = $this->session->userdata("username");
         if ($this->form_validation->run() == false) {
-            $this->editpassword();
+            $this->profiladmin();
         } else {
-            $id = $this->input->post('id');
             $oldpassword = $this->input->post('oldpassword');
             $newpassword = $this->input->post('password1');
 
-            $resultpas = $this->Admin_model->cekpassword($oldpassword);
-            if (!empty($resultpas)) {
-                $this->session->set_flashdata('nomatch', 'Password lama Salah');
+            $resultpas = $this->Admin_model->cekpassword($oldpassword, $usernama_session);
+            if (empty($resultpas)) {
+                $this->session->set_flashdata('error', 'Password lama Salah');
                 redirect('profiladmin');
             } else {
 
@@ -232,12 +242,14 @@ class Admin extends CI_Controller
                     'updateDtm' => $DTM
                 );
 
-                $result = $this->Admin_model->updatepassword($data, $id);
+                $result = $this->Admin_model->updatepassword($data, $usernama_session);
 
                 if ($result > 0) {
                     $this->session->set_flashdata('success', 'Password Berhasil diUpdate');
+                    redirect('profiladmin');
                 } else {
                     $this->session->set_flashdata('error', 'Password gagal diupdate');
+                    redirect('profiladmin');
                 }
             }
             redirect('profiladmin');
@@ -246,35 +258,30 @@ class Admin extends CI_Controller
 
     public function updatefoto()
     {
-        $this->form_validation->set_rules('foto', 'Foto', 'required');
         $config['upload_path'] = './assets/images/fotoadmin/';
         $config['allowed_types'] = 'jpg|jpeg|png';
         $config['max_size'] = '2048';
         $this->load->library('upload', $config);
 
-        if ($this->form_validation->run() == false) {
-            $this->editfoto();
+        $usernama_session = $this->session->userdata("username");
+        $this->upload->do_upload('foto');
+        $upload_data = $this->upload->data();
+        $file_name =   $upload_data['file_name'];
+        $foto = $file_name;
+
+        $data = array(
+            'foto' => $foto
+        );
+
+        $result = $this->Admin_model->updatefoto($data, $usernama_session);
+
+        if ($result == true) {
+            $this->session->set_flashdata('success', 'Update Foto Berhasil');
         } else {
-            $id = $this->input->post('id');
-            $this->upload->do_upload('foto');
-            $upload_data = $this->upload->data();
-            $file_name =   base_url() . 'assets/images/fotoadmin/' . $upload_data['file_name'];
-            $foto = $file_name;
-
-            $data = array(
-                'foto' => $foto
-            );
-
-            $result = $this->Admin_model->updatefoto($data, $id);
-
-            if ($result == true) {
-                $this->session->set_flashdata('success', 'Update Foto Berhasil');
-            } else {
-                $this->session->set_flashdata('error', 'Update Foto Gagal');
-            }
-
-            redirect('profiladmin');
+            $this->session->set_flashdata('error', 'Update Foto Gagal');
         }
+
+        redirect('profiladmin');
     }
 
     public function editpegawai($tbl_idpegawai)
@@ -283,6 +290,7 @@ class Admin extends CI_Controller
         $data['profil'] = $this->Admin_model->profil($username);
         $data['title'] = 'Edit Pegawai';
         $data['editpegawai'] = $this->Admin_model->getprofilpegawai($tbl_idpegawai);
+        $data['jbt'] = $this->Admin_model->get_Jabatan();
         $this->load->view('admin/tempelate/header', $data, null);
         $this->load->view('admin/editpegawai', $data, null);
         $this->load->view('admin/tempelate/footer');
@@ -295,19 +303,22 @@ class Admin extends CI_Controller
         $this->form_validation->set_rules('nama', 'Nama', 'required');
         $this->form_validation->set_rules('nip', 'Nomor Pegawai', 'required');
         $this->form_validation->set_rules('rfid', 'Nomor RFID', 'required');
+        $this->form_validation->set_rules('jabatan', 'Jabatan', 'required');
 
         if ($this->form_validation->run() == false) {
-            $this->editprofil();
+            $this->datapegawai();
         } else {
             $id = ucwords(strtolower($this->security->xss_clean($this->input->post('id'))));
             $nama = ucwords(strtolower($this->security->xss_clean($this->input->post('nama'))));
             $nip = ucwords(strtolower($this->security->xss_clean($this->input->post('nip'))));
             $rfid = ucwords(strtolower($this->security->xss_clean($this->input->post('rfid'))));
+            $jabatan = ucwords(strtolower($this->security->xss_clean($this->input->post('jabatan'))));
 
             $data = array(
                 'nama_pegawai' => $nama,
                 'nomor_pegawai' => $nip,
                 'koderfid' => $rfid,
+                'jabatan' => $jabatan,
                 'updateDtm' => $DTM
             );
 
@@ -320,27 +331,6 @@ class Admin extends CI_Controller
             redirect('datapegawai');
         }
     }
-
-    /* public function resetpasswordpegawai($tbl_idpegawai)
-    {
-        date_default_timezone_set('Asia/Jakarta');
-        $DTM = date('Y-m-d H:i:s');
-        $cek = $this->Admin_model->getprofilpegawai($tbl_idpegawai);
-        if (!empty($cek)) {
-            $data = array(
-                'password' => getHashedPassword('12345'),
-                'updateDtm' => $DTM
-            );
-            $result = $this->Admin_model->resetpasswordpegawai($data, $tbl_idpegawai);
-            if ($result == true) {
-                $this->session->set_flashdata('success', 'Password dengan Nama ' . $cek->nama_pegawai . ' berhasil di Reset');
-            }
-            redirect('datapegawai');
-        } else {
-            $this->session->set_flashdata('error', 'Gagal Reset Password');
-            redirect('datapegawai');
-        }
-    } */
 
     public function hapuspegawai($tbl_idpegawai)
     {
@@ -523,16 +513,100 @@ class Admin extends CI_Controller
         $this->load->view('admin/tempelate/footer');
     }
 
-    public function get_NotifResetPassword()
+    public function get_PermintaanResetPegawai()
     {
-        $data = $this->Admin_model->get_NotifResetPassword()->result();
-        echo json_encode($data);
+        $username = $this->session->userdata("username");
+        $data['profil'] = $this->Admin_model->profil($username);
+        $data['title'] = 'Data Permintann Reset Password Pegawai';
+        $data['resetpassword'] = $this->Admin_model->get_PermintaanResetPegawai();
+        $this->load->view('admin/tempelate/header', $data, null);
+        $this->load->view('admin/resetpassword', $data, null);
+        $this->load->view('admin/tempelate/footer');
     }
 
-    public function get_TotalNotifikasiReset()
+    public function get_AbsenHariIni()
     {
-        $data = $this->Admin_model->get_TotalNotifikasiReset();
-        echo json_encode($data);
+        date_default_timezone_set('Asia/Jakarta');
+        $tanggal = date('Y-m-d');
+        $username = $this->session->userdata("username");
+        $data['profil'] = $this->Admin_model->profil($username);
+        $data['title'] = 'Absensi Perhari';
+        $data['absen'] = $this->Admin_model->get_AbsenHariIni($tanggal);
+        $this->load->view('admin/tempelate/header', $data, null);
+        $this->load->view('admin/absenhariini', $data, null);
+        $this->load->view('admin/tempelate/footer');
+    }
+
+    public function get_viewPermintaanResetPassword()
+    {
+        $username = $this->session->userdata("username");
+        $data['profil'] = $this->Admin_model->profil($username);
+        $data['title'] = 'Reset Password';
+        $data['resetpassword'] = $this->Admin_model->get_viewPermintaanResetPassword();
+        $this->load->view('admin/tempelate/header', $data, null);
+        $this->load->view('admin/resetpassword', $data, null);
+        $this->load->view('admin/tempelate/footer');
+    }
+
+    public function get_Jabatan()
+    {
+        $username = $this->session->userdata("username");
+        $data['profil'] = $this->Admin_model->profil($username);
+        $data['title'] = 'Jabatan Pegawai';
+        $data['jabatan'] = $this->Admin_model->get_Jabatan();
+        $this->load->view('admin/tempelate/header', $data, null);
+        $this->load->view('admin/Jabatan', $data, null);
+        $this->load->view('admin/tempelate/footer');
+    }
+
+    public function get_InputJabatan()
+    {
+        $this->form_validation->set_rules('jabatan', 'Jabatan', 'required');
+
+        if ($this->form_validation->run() == false) {
+            $this->get_Jabatan();
+        } else {
+            $jabatan = ucwords(strtolower($this->security->xss_clean($this->input->post('jabatan'))));
+            $cekJabatan = $this->Admin_model->get_CekJabatan($jabatan);
+            if ($cekJabatan > 0) {
+                $this->session->set_flashdata('error', 'Nama Jabatan Tidak Boleh Sama');
+                redirect('jabatan');
+            } else {
+                $data = ['jabatan' => $jabatan];
+
+                $result = $this->Admin_model->get_UploadJabatan($data);
+                if ($result > 0) {
+                    $this->session->set_flashdata('success', 'Jabatan Berhasil di Tambah');
+                    redirect('jabatan');
+                } else {
+                    $this->session->set_flashdata('error', 'Gagal upload data');
+                    redirect('jabatan');
+                }
+            }
+        }
+    }
+
+    public function get_DeleteJabatan($id)
+    {
+        $result = $this->Admin_model->get_DeleteJabatan($id);
+        if (empty($result)) {
+            $this->session->set_flashdata('success', 'Jabatan Berhasil di Hapus');
+            redirect('jabatan');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal Hapus Jabatan');
+            redirect('jabatan');
+        }
+    }
+
+    public function get_StatusLoginPegawai()
+    {
+        $username = $this->session->userdata("username");
+        $data['profil'] = $this->Admin_model->profil($username);
+        $data['title'] = 'Status Login Pegawai';
+        $data['status'] = $this->Admin_model->get_StatusLogin();
+        $this->load->view('admin/tempelate/header', $data, null);
+        $this->load->view('admin/statuslogin', $data, null);
+        $this->load->view('admin/tempelate/footer');
     }
 
     function logout()
