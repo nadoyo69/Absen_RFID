@@ -609,6 +609,52 @@ class Admin extends CI_Controller
         $this->load->view('admin/tempelate/footer');
     }
 
+    public function get_JamAbsensi()
+    {
+        $username = $this->session->userdata("username");
+        $data['profil'] = $this->Admin_model->profil($username);
+        $data['title'] = 'Jam Absensi';
+        $data['jamabsen'] = $this->Admin_model->get_JamAbsensi();
+        $this->load->view('admin/tempelate/header', $data, null);
+        $this->load->view('admin/jamabsen', $data, null);
+        $this->load->view('admin/tempelate/footer');
+    }
+
+    public function get_UpdateJamAbsensi()
+    {
+        $this->form_validation->set_rules('jam_masuk', 'Jam Masuk', 'required');
+        $this->form_validation->set_rules('max_jammasuk', 'Jam Masuk', 'required');
+        $this->form_validation->set_rules('jam_pulang', 'Jam Masuk', 'required');
+        $this->form_validation->set_rules('max_jampulang', 'Jam Masuk', 'required');
+        if ($this->form_validation->run() == false) {
+            $this->get_JamAbsensi();
+        } else {
+            $jam_masuk = $this->input->post('jam_masuk');
+            $max_jammasuk = $this->input->post('max_jammasuk');
+            $jam_pulang = $this->input->post('jam_pulang');
+            $max_jampulang = $this->input->post('max_jampulang');
+
+            $data = [
+                'jam_masuk' => $jam_masuk,
+                'max_jammasuk' => $max_jammasuk,
+                'jam_pulang' => $jam_pulang,
+                'max_jampulang' => $max_jampulang
+            ];
+
+            $result = $this->Admin_model->get_UpdateJamAbsensi($data);
+
+            if ($result == true) {
+                $this->session->set_flashdata('success', 'Data berhasil di Update');
+                redirect('jamabsen');
+            } else {
+                $this->session->set_flashdata('error', 'Data  gagal di update');
+                redirect('jamabsen');
+            }
+
+            redirect('jamabsen');
+        }
+    }
+
     function logout()
     {
         $botToken = "972979337:AAGQ5o0QZ1TgL-CzbOYqJrDE6GGU_cJv5ks";

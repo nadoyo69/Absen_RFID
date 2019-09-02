@@ -129,6 +129,9 @@
                 } else if (data.message === 'errordua') {
                     var x = document.getElementsByClassName("alertabsen");
                     x[0].innerHTML = "Anda Belum Melakukan Absensi Datang";
+                } else if (data.message === 'errortiga') {
+                    var x = document.getElementsByClassName("alertabsen");
+                    x[0].innerHTML = "Jam Absen Sudah Lewat";
                 } else {
                     var x = document.getElementsByClassName("alertabsen");
                     x[0].innerHTML = "Data Anda Belum Terdaftar";

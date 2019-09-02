@@ -82,6 +82,9 @@ $route['jabatan'] = 'Admin/get_Jabatan';
 $route['inputjabatan'] = 'Admin/get_InputJabatan';
 $route['hapusjabatan/(:num)'] = 'Admin/get_DeleteJabatan/$1';
 $route['statuslogin'] = 'Admin/get_StatusLoginPegawai';
+$route['jamabsen'] = 'Admin/get_JamAbsensi';
+$route['updatejamabsen'] = 'Admin/get_UpdateJamAbsensi';
+
 
 //login Admin
 $route['logout'] = 'Admin/logout';

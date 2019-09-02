@@ -51,6 +51,8 @@ class Absen extends CI_Controller
         $sore = strtotime('22:00:00');
         $sorex = strtotime('24:00:00');
 
+        $cektimedb = $this->Absen_model->get_CekJamAbsen();
+
         $this->load->view('vendor/autoload.php');
         $options = array(
             'cluster' => 'ap1',
@@ -63,7 +65,7 @@ class Absen extends CI_Controller
             $options
         );
 
-        if (time() >= $pagi && time() <= $pagix) {
+        if (time() >= strtotime($cektimedb->jam_masuk) && time() <= strtotime($cektimedb->max_jammasuk)) {
             $result = $this->Absen_model->cekpegawairfid($nomor_rfid);
             if (!empty($result)) {
                 $cek = $this->Absen_model->cektanggalrfid($nomor_rfid, $tanggal_masuk);
@@ -95,7 +97,7 @@ class Absen extends CI_Controller
 
                 redirect('absen');
             }
-        } else if (time() >= $sore && time() <= $sorex) {
+        } else if (time() >= strtotime($cektimedb->jam_pulang) && time() <= strtotime($cektimedb->max_jampulang)) {
             $result = $this->Absen_model->cekabsendatang($nomor_rfid, $tanggal_masuk);
             if (!empty($result)) {
                 $datapulang = array(
@@ -114,6 +116,8 @@ class Absen extends CI_Controller
                 redirect('absen');
             }
         } else {
+            $data['message'] = 'errortiga';
+            $pusher->trigger('my-channel', 'my-event', $data);
             redirect('absen');
         }
     }

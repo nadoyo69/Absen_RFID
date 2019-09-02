@@ -330,4 +330,16 @@ class Admin_model extends CI_Model
             return 0;
         }
     }
+
+    public function get_JamAbsensi()
+    {
+        $query = $this->db->get('jam_absen');
+        return $query->result_array();
+    }
+
+    public function get_UpdateJamAbsensi($data)
+    {
+        $this->db->update('jam_absen', $data);
+        return true;
+    }
 }

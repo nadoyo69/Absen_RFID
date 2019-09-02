@@ -147,6 +147,7 @@ $foto = $profil->foto;
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= base_url('permintaanreset') ?>" aria-expanded="false"><i class="mdi mdi-flag-checkered"></i><span class="hide-menu">Laporan Reset Password</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= base_url('laporan') ?>" aria-expanded="false"><i class="mdi mdi-flag-checkered"></i><span class="hide-menu">Laporan</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= base_url('statuslogin') ?>" aria-expanded="false"><i class="mdi mdi-nest-thermostat"></i><span class="hide-menu">Status Login</span></a></li>
+                        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= base_url('jamabsen') ?>" aria-expanded="false"><i class="mdi mdi-clock"></i><span class="hide-menu">Jam Absensi</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?= base_url('backup') ?>" onClick="return confirm('Apakah Anda Yakin?')" aria-expanded="false"><i class="mdi mdi-backup-restore"></i><span class="hide-menu">Backup Database</span></a></li>
                     </ul>
                 </nav>
