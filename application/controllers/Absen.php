@@ -46,11 +46,6 @@ class Absen extends CI_Controller
         $bulan = date('m');
         $tahun = date('Y');
 
-        $pagi = strtotime('07:00:00');
-        $pagix = strtotime('21:00:00');
-        $sore = strtotime('22:00:00');
-        $sorex = strtotime('24:00:00');
-
         $cektimedb = $this->Absen_model->get_CekJamAbsen();
 
         $this->load->view('vendor/autoload.php');

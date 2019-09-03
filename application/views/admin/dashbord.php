@@ -41,7 +41,7 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Pegawai Masuk Hari ini</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $absen_hari_ini; ?></div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><i id="totalabsen"></i></div>
                     </div>
                     <div class="col-auto">
                         <i class="fa fa-user fa-2x text-success"></i>
@@ -135,20 +135,6 @@ foreach ($grafik as $data) {
     $total[] = $data->total;
 }
 ?>
-<script>
-    new Chart(document.getElementById("mychart"), {
-        type: 'line',
-        data: {
-            labels: <?= json_encode($tanggal) ?>,
-            datasets: [{
-                data: <?= json_encode($total) ?>,
-                label: "Data Prsensi",
-                borderColor: "#3e95cd",
-                fill: false
-            }],
-        }
-    });
-</script>
 
 <!-- data table Login -->
 <?php
@@ -158,16 +144,62 @@ foreach ($grafiklogin as $login) {
 }
 ?>
 <script>
-    new Chart(document.getElementById("mychartlogin"), {
-        type: 'line',
-        data: {
-            labels: <?= json_encode($tanggal_login) ?>,
-            datasets: [{
-                data: <?= json_encode($totallogin) ?>,
-                label: "Data Login",
-                borderColor: "#3e95cd",
-                fill: false
-            }],
+    $(document).ready(function() {
+        show_product();
+        Pusher.logToConsole = true;
+        var pusher = new Pusher('daa8c8cd19c2dc18dbb2', {
+            cluster: 'ap1',
+            forceTLS: true
+        });
+        var channel = pusher.subscribe('my-channel');
+        channel.bind('my-event', function(data) {
+            if (data.message === 'success') {
+                show_product();
+            }
+        });
+
+        function show_product() {
+            $.ajax({
+                type: 'get',
+                url: '<?php echo site_url("Admin/get_totalabsen"); ?>',
+                dataType: 'json',
+                success: function(html) {
+                    $('#totalabsen').html(html);
+                }
+
+            });
+
+            var ctx = document.getElementById("mychart").getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: <?= json_encode($tanggal) ?>,
+                    datasets: [{
+                        data: <?= json_encode($total) ?>,
+                        label: "Data Prsensi",
+                        borderColor: "#3e95cd",
+                        fill: false
+                    }],
+                }
+            });
+
+            var ctx = document.getElementById("mychartlogin").getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: <?= json_encode($tanggal_login) ?>,
+                    datasets: [{
+                        data: <?= json_encode($totallogin) ?>,
+                        label: "Data Login",
+                        borderColor: "#3e95cd",
+                        fill: false
+                    }],
+                }
+            });
+
+
         }
+
+
     });
 </script>

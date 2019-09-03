@@ -34,6 +34,23 @@ class Admin extends CI_Controller
         $this->load->view('admin/tempelate/footer');
     }
 
+    function get_totalabsen()
+    {
+        date_default_timezone_set('Asia/Jakarta');
+        $tanggal_masuk = date('Y-m-d');
+        $data = $this->Admin_model->absen_hari_ini($tanggal_masuk);
+        echo json_encode($data);
+    }
+
+    function get_GrafikAbsensi()
+    {
+        date_default_timezone_set('Asia/Jakarta');
+        $bulan = date('m');
+        $tahun = date('Y');
+        $data = $this->Admin_model->grafik($bulan, $tahun);
+        echo json_encode($data);
+    }
+
     public function datapegawai($tbl_idpegawai = null)
     {
         $username = $this->session->userdata("username");
