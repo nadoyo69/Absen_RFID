@@ -6,7 +6,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url('assets/images/nadoyo1.png') ?>">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="<?php echo base_url() ?>assets/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" type="text/css" href="<?= base_url() ?>assets/css_absen/style.css">
+    <link rel="stylesheet" type="text/css" href="<?= base_url() ?>assets/absen/style.css">
 </head>
 
 <body oncontextmenu="return !true;">
@@ -97,92 +97,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
-    <script>
-        window.setTimeout("waktu()", 1000);
+    <script src="<?= base_url('assets/absen/absenjs.js') ?>"></script>
 
-        function waktu() {
-            var waktu = new Date();
-            setTimeout("waktu()", 1000);
-            document.getElementById("jam").innerHTML = waktu.getHours();
-            document.getElementById("menit").innerHTML = waktu.getMinutes();
-            document.getElementById("detik").innerHTML = waktu.getSeconds();
-        }
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            show_product();
-            Pusher.logToConsole = true;
-            var pusher = new Pusher('daa8c8cd19c2dc18dbb2', {
-                cluster: 'ap1',
-                forceTLS: true
-            });
-            var channel = pusher.subscribe('my-channel');
-            channel.bind('my-event', function(data) {
-                if (data.message === 'success') {
-                    show_product();
-                    var x = document.getElementsByClassName("alertabsen");
-                    x[0].innerHTML = "Presensi Berhasil";
-                } else if (data.message === 'errorsatu') {
-                    var x = document.getElementsByClassName("alertabsen");
-                    x[0].innerHTML = "Anda Sudah Absensi";
-                } else if (data.message === 'errordua') {
-                    var x = document.getElementsByClassName("alertabsen");
-                    x[0].innerHTML = "Anda Belum Melakukan Absensi Datang";
-                } else if (data.message === 'errortiga') {
-                    var x = document.getElementsByClassName("alertabsen");
-                    x[0].innerHTML = "Jam Absen Sudah Lewat";
-                } else {
-                    var x = document.getElementsByClassName("alertabsen");
-                    x[0].innerHTML = "Data Anda Belum Terdaftar";
-                }
-            });
-
-            function show_product() {
-                $.ajax({
-                    url: '<?php echo site_url("Absen/get_product"); ?>',
-                    type: 'GET',
-                    async: true,
-                    dataType: 'json',
-                    success: function(data) {
-                        var html = '';
-                        var count = 1;
-                        var i;
-                        for (i = 0; i < data.length; i++) {
-                            html += '<tr>' +
-                                '<td>' + count++ + '</td>' +
-                                '<td>' + data[i].nama_pegawai + '</td>' +
-                                '<td>' + data[i].tanggal_masuk + '</td>' +
-                                '<td>' + data[i].jam_masuk + '</td>' +
-                                '<td>' + data[i].jam_keluar + '</td>' +
-                                '</tr>';
-                        }
-                        $('.show_product').html(html);
-                    }
-                });
-
-                $.ajax({
-                    type: 'get',
-                    url: '<?php echo site_url("Absen/get_total"); ?>',
-                    dataType: 'json',
-                    success: function(html) {
-                        $('#totalabsen').html(html);
-                    }
-
-                });
-
-                $.ajax({
-                    type: 'get',
-                    url: '<?php echo site_url("Absen/get_absen"); ?>',
-                    dataType: 'json',
-                    success: function(html) {
-                        $('#absen').html(html);
-                    }
-
-                });
-            }
-        });
-    </script>
 </body>
 
 </html>

@@ -20,10 +20,6 @@ class Admin extends CI_Controller
         $data['title'] = 'Dashbord';
         date_default_timezone_set('Asia/Jakarta');
         $tanggal = date('Y-m-d');
-        $bulan = date('m');
-        $tahun = date('Y');
-        $data['grafik'] = $this->Admin_model->grafik($bulan, $tahun);
-        $data['grafiklogin'] = $this->Admin_model->grafiklogin($bulan, $tahun);
         $data['absen_hari_ini'] = $this->Admin_model->absen_hari_ini($tanggal);
         $data['total_pegawai'] = $this->Admin_model->total_pegawai_aktif();
         $data['total_pegawai_nonaktif'] = $this->Admin_model->total_pegawai_nonaktif();
@@ -32,6 +28,32 @@ class Admin extends CI_Controller
         $this->load->view('admin/tempelate/header', $data, NULL);
         $this->load->view('admin/dashbord', $data, NULL);
         $this->load->view('admin/tempelate/footer');
+    }
+
+    function logout()
+    {
+        $botToken = "972979337:AAGQ5o0QZ1TgL-CzbOYqJrDE6GGU_cJv5ks";
+        $perangkat = $_SERVER['HTTP_USER_AGENT'];
+        date_default_timezone_set('Asia/Jakarta');
+        $waktu = date('Y-m-d H:i:s');
+        $website = "https://api.telegram.org/bot" . $botToken;
+        $chatId = -304126311;
+        $params = [
+            'chat_id' => $chatId,
+            'text' => 'User sudah Logout dengan ' . ' ____IP=>' . $_SERVER['REMOTE_ADDR'] . ' ____Tanggal&Jam=>' . $waktu . ' ____Perangkat Lunak =>' . $perangkat,
+        ];
+        $ch = curl_init($website . '/sendMessage');
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, ($params));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        $this->session->sess_destroy();
+
+        redirect(base_url('Admin'));
     }
 
     function get_totalabsen()
@@ -48,6 +70,15 @@ class Admin extends CI_Controller
         $bulan = date('m');
         $tahun = date('Y');
         $data = $this->Admin_model->grafik($bulan, $tahun);
+        echo json_encode($data);
+    }
+
+    function get_GrafikLogin()
+    {
+        date_default_timezone_set('Asia/Jakarta');
+        $bulan = date('m');
+        $tahun = date('Y');
+        $data = $this->Admin_model->grafiklogin($bulan, $tahun);
         echo json_encode($data);
     }
 
@@ -287,7 +318,7 @@ class Admin extends CI_Controller
         $foto = $file_name;
 
         $data = array(
-            'foto' => $foto
+            'foto_admin' => $foto
         );
 
         $result = $this->Admin_model->updatefoto($data, $usernama_session);
@@ -670,31 +701,5 @@ class Admin extends CI_Controller
 
             redirect('jamabsen');
         }
-    }
-
-    function logout()
-    {
-        $botToken = "972979337:AAGQ5o0QZ1TgL-CzbOYqJrDE6GGU_cJv5ks";
-        $perangkat = $_SERVER['HTTP_USER_AGENT'];
-        date_default_timezone_set('Asia/Jakarta');
-        $waktu = date('Y-m-d H:i:s');
-        $website = "https://api.telegram.org/bot" . $botToken;
-        $chatId = -304126311;
-        $params = [
-            'chat_id' => $chatId,
-            'text' => 'User sudah Logout dengan ' . ' ____IP=>' . $_SERVER['REMOTE_ADDR'] . ' ____Tanggal&Jam=>' . $waktu . ' ____Perangkat Lunak =>' . $perangkat,
-        ];
-        $ch = curl_init($website . '/sendMessage');
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, ($params));
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        $result = curl_exec($ch);
-        curl_close($ch);
-
-        $this->session->sess_destroy();
-
-        redirect(base_url('Admin'));
     }
 }

@@ -43,10 +43,10 @@
                             <td><?= $data['nomor_pegawai'] ?></td>
                             <td class="text-center">
                                 <?php if (time() < $data['time']) { ?>
-                                    <span class="badge badge-pill badge-success">Aktif</span>
+                                    <span class="badge badge-pill badge-success">ON</span>
                                 <?php } ?>
                                 <?php if (time() > $data['time']) { ?>
-                                    <span class="badge badge-pill badge-danger">Non Aktif</span>
+                                    <span class="badge badge-pill badge-danger">OFF</span>
                                 <?php } ?>
                             </td>
                         </tr>

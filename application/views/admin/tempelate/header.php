@@ -1,5 +1,5 @@
 <?php
-$foto = $profil->foto;
+$foto = $profil->foto_admin;
 ?>
 <!DOCTYPE html>
 <html class="no-js" dir="ltr" lang="en">
@@ -19,57 +19,7 @@ $foto = $profil->foto;
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://js.pusher.com/5.0/pusher.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            show_product();
-            Pusher.logToConsole = true;
-            var pusher = new Pusher('daa8c8cd19c2dc18dbb2', {
-                cluster: 'ap1',
-                forceTLS: true
-            });
-            var channel = pusher.subscribe('my-channel');
-            channel.bind('my-event', function(data) {
-                if (data.message === 'success') {
-                    show_product();
-                }
-            });
 
-            function show_product() {
-                $.ajax({
-                    url: '<?php echo site_url("notifikasiizin"); ?>',
-                    type: 'GET',
-                    async: true,
-                    dataType: 'json',
-                    success: function(data) {
-                        var html = '';
-                        var i;
-                        for (i = 0; i < data.length; i++) {
-                            html +=
-                                '<div class="d-flex no-block align-items-center p-10">' +
-                                '<span class="btn btn-success btn-circle"><i class="ti-user"></i></span>' +
-                                '<div class="m-l-10">' +
-                                '<h5>' + data[i].nama_pegawai + '</h5>' +
-                                '<h6> Jenis Surat "' + data[i].jenis + '"</h6>' +
-                                '<span>' + data[i].DTM + '</span>' +
-                                '</div>' +
-                                '</div>';
-                        }
-                        $('.notifikasi').html(html);
-                    }
-                });
-
-                $.ajax({
-                    type: 'get',
-                    url: '<?php echo site_url("totalnotif"); ?>',
-                    dataType: 'json',
-                    success: function(html) {
-                        $('#totalnotif').html(html);
-                    }
-
-                });
-            }
-        });
-    </script>
 </head>
 
 <body>

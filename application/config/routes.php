@@ -85,7 +85,6 @@ $route['statuslogin'] = 'Admin/get_StatusLoginPegawai';
 $route['jamabsen'] = 'Admin/get_JamAbsensi';
 $route['updatejamabsen'] = 'Admin/get_UpdateJamAbsensi';
 
-
 //login Admin
 $route['logout'] = 'Admin/logout';
 $route['Admin'] = 'LoginAdmin';

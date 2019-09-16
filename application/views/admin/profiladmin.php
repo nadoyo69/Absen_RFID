@@ -7,7 +7,7 @@ $alamat = $profil->alamat;
 $kontak = $profil->nomor_hp;
 $tgl = $profil->tanggal_lahir;
 $tmp = $profil->tempat_lahir;
-$foto = $profil->foto;
+$foto = $profil->foto_admin;
 $password = $profil->password;
 ?>
 <div class="container bootstrap snippet">
