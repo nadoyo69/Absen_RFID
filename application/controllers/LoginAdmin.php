@@ -234,8 +234,8 @@ class LoginAdmin extends CI_Controller
         $config = [
             'protocol' => 'smtp',
             'smtp_host' => 'smtp.gmail.com',
-            'smtp_user' => 'pictnadoyo@gmail.com',
-            'smtp_pass' => 'Qwertyuiop12345?',
+            'smtp_user' => 'youremail@gmail.com',
+            'smtp_pass' => 'Passowrd?',
             'smtp_port' => 587,
             'mailtype' => 'html',
             'charset' => 'UTF-8',
@@ -244,7 +244,7 @@ class LoginAdmin extends CI_Controller
 
         $this->load->library('email', $config);
 
-        $this->email->from('pictnadoyo@gmail.com', 'Admin PT-Nadoyo');
+        $this->email->from('youremail@gmail.com', 'Admin PT-Nadoyo');
         $this->email->to($email);
         $this->email->subject('Reset Password PT-Nadoyo');
         $this->email->message('Silahkan Klik link untuk Reset Password : <a href="' . base_url() . 'resetpasswordadmin?email=' . $email . '&token=' . urlencode($token) . '">Reset Password</a>');
