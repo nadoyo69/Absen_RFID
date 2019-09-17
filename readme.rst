@@ -12,6 +12,7 @@ Absensi Berbasis RFID dan Website
 #Pusher hanya berfungsi jika web di onlinekan. misal di vps, hosting
 #Jangan Lupa mengganti link pada assets/absen/absenjs.js (ganti link dengan base_url anda sendiri)
 #Jangan Lupa mengganti link pada assets/admin/js/admin.js (ganti link dengan base_url anda sendiri)
+#Ganti Email & Password untuk Fitur Forget Password (Controller/LoginAdmin & LoginPegawai)
 ******************************************
 
 ******************************************
