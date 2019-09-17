@@ -131,17 +131,17 @@ class LoginPegawai extends CI_Controller
         $config = [
             'protocol' => 'smtp',
             'smtp_host' => 'smtp.gmail.com',
-            'smtp_user' => 'pictnadoyo@gmail.com',
-            'smtp_pass' => 'Qwertyuiop12345?',
+            'smtp_user' => 'youremail@gmail.com',
+            'smtp_pass' => 'Passowrd?',
             'smtp_port' => 587,
             'mailtype' => 'html',
-            'charset' => 'utf-8',
+            'charset' => 'UTF-8',
             'newline' => "\r\n"
         ];
 
         $this->load->library('email', $config);
 
-        $this->email->from('pictnadoyo@gmail.com', 'Admin PT-Nadoyo');
+        $this->email->from('youremail@gmail.com', 'Admin PT-Nadoyo');
         $this->email->to($email);
         $this->email->subject('Reset Password PT-Nadoyo');
         $this->email->message('Silahkan Klik link untuk Reset Password : <a href="' . base_url() . 'resetpassword?email=' . $email . '&token=' . urlencode($token) . '">Reset Password</a>');
