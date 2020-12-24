@@ -3,6 +3,21 @@
 ![alt text](https://github.com/nadoyo69/Absen_RFID/blob/master/assets/img2.png?raw=true)
 
 
+## Infotmation
+```
+-- Website --
+Codeigniter 3
+Bootstrap 4
+Pusher(real time)
+
+-- Alat Absensi --
+Nodemcu
+RFID
+Buzzer
+Jumper
+Breadboard
+```
+
 ## Credential
 
 
@@ -10,7 +25,7 @@
 -- Url Admin --
 http://127.0.0.1/Admin
 Username = Nadoyo
-Password = nadoyo
+Password = Nadoyo
 ```
 ![alt text](https://github.com/nadoyo69/Absen_RFID/blob/master/assets/img3.png?raw=true)
 
@@ -39,4 +54,10 @@ $botToken = <YourBOTToken>;
 $chatId = 123123; 
 ```
 ![alt text](https://github.com/nadoyo69/Absen_RFID/blob/master/assets/img.png?raw=true)
+
+## Pusher Real Time
+```
+Daftar Puser di https://pusher.com/
+```
+
 
