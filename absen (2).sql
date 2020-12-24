@@ -50,8 +50,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`tbl_idadmin`, `nama_admin`, `username_admin`, `password`, `email_admin`, `alamat`, `nomor_hp`, `tanggal_lahir`, `tempat_lahir`, `otp`, `timeotp`, `foto`, `createDtm`, `updateDtm`) VALUES
-(1, 'Nadoyoas', 'Nadoyo', '$2y$10$jCYUzAeG6sxr/UBUQmh9ieMTuqsltk2zUxhmAH.ivj2KNVVNGYhCK', 'Nadoyo27@gmail.com', 'Jalan Rayaasd', 324234234, '2019-07-14', 'Indonesia', '$2y$10$reA0o.m/FhGqkIidiPFkUuKNtRKjxkEiQM4YjEA31Hfzia8zFHaLC', 'MTU2NzUxMDkzMA==', '9576531.jpg', '0000-00-00 00:00:00', '2019-09-02 13:32:54'),
-(2, 'Sayang', 'Sayang', '$2y$10$PoCnBb8UcygbWQZG7h2F3.xg6uu8RgPI1M0FfqLNjKc2CUn46K9ou', 'Sayang@gmail.com', 'Jalan Satu', 77782378, '2019-07-22', 'Yogyakarta', '$2y$10$jnb7CTk7rdEIsMoVhWgvMuUEREYHfVYgRBEM.18m1cOvwhaLilE22', 'MTU2NzQwNTgwNQ==', 'default1.png', '0000-00-00 00:00:00', '2019-09-01 20:00:05');
+(1, 'NADOYO', 'Nadoyo', '$2y$10$wIBwiFHS6yL5QPhA34q9mevI64sMZtIl7dGwz0AdxK/oTyOj57m6.', 'Nadoyo27@gmail.com', 'Jalan Rayaasd', 324234234, '2019-07-14', 'Indonesia', '$2y$10$reA0o.m/FhGqkIidiPFkUuKNtRKjxkEiQM4YjEA31Hfzia8zFHaLC', 'MTU2NzUxMDkzMA==', '9576531.jpg', '0000-00-00 00:00:00', '2019-09-02 13:32:54');
 
 -- --------------------------------------------------------
 
