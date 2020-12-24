@@ -1,5 +1,8 @@
 # Absen Scan RFID
 
+![alt text](https://github.com/nadoyo69/Absen_RFID/blob/master/assets/img2.png?raw=true)
+
+
 ## Credential
 
 
@@ -9,6 +12,8 @@ http://127.0.0.1/Admin
 Username = Nadoyo
 Password = Nadoyo
 ```
+![alt text](https://github.com/nadoyo69/Absen_RFID/blob/master/assets/img3.png?raw=true)
+
 ## .htaccss (apache/httpd)
 ```.htaccess
 RewriteEngine On
@@ -33,4 +38,5 @@ https://api.telegram.org/bot<YourBOTToken>/getUpdates
 $botToken = <YourBOTToken>; 
 $chatId = 123123; 
 ```
+![alt text](https://github.com/nadoyo69/Absen_RFID/blob/master/assets/img.png?raw=true)
 
