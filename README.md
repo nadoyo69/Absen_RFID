@@ -25,7 +25,7 @@ Breadboard
 -- Url Admin --
 http://127.0.0.1/Admin
 Username = Nadoyo
-Password = Nadoyo
+Password = nadoyo
 ```
 ![alt text](https://github.com/nadoyo69/Absen_RFID/blob/master/assets/img3.png?raw=true)
 
