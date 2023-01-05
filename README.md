@@ -1,3 +1,4 @@
+# SILAHKAN DI EXPLOR SENDIRI
 # Absen Scan RFID
 
 ![alt text](https://github.com/nadoyo69/Absen_RFID/blob/master/assets/img2.png?raw=true)
